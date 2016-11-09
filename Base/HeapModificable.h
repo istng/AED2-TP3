@@ -37,6 +37,10 @@ class HeapModificable
 				JugadorHeap& siguiente() const;
 				void eliminarSiguiente();
 				void agregarComoSiguiente(const JugadorHeap& a);
+				
+			private:
+				Nodo* siguiente;
+				Nodo* heap;
 		}
 		
 		class const_Iterador
@@ -45,6 +49,10 @@ class HeapModificable
 				Iterador();	// CrearIt()
 				bool haySiguiente() const;
 				const JugadorHeap& siguiente() const;
+				
+			private:
+				Nodo* siguiente;
+				Nodo* heap;
 		}
 		
 	private:
