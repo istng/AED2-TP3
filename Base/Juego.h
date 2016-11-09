@@ -1,138 +1,104 @@
-#ifndef JUEGO_H_
-#define JUEGO_H_
+#ifndef TP3_JUEGO_
+#define TP3_JUEGO_
 
 #include "TiposJuego.h"
-#include "mapa.hpp"
-#include "HeapModificable.h"
-struct pokes{
 
-    Pokemon poke;
-    Nat cant;
-
+class Juego
+{
+	public:
+	
+		typedef pokemonsCapturados Nat; // solo aparece en heap
+		typedef Vector< Vector<T> > Matriz<T>;
+	
+	// Observadores
+		const Mapa& mapa() const; 
+		Conj<Jugador>::const_Iterador jugadores() const;
+		bool estaConectada(Jugador e) const;
+		Nat sanciones(Jugador e) const;
+		const Coordenada& posicion(Jugador e) const;
+		Conj<Pokemon, Nat>::const_Iterador pokemons(Jugador e) const;
+		const Conj<Jugador>& expulsados() const;
+		const Conj<Coordenada>& posConPokemons() const;
+		const Pokemon& pokemonEnPos(const Coordenada& c) const;
+		Nat cantMovimientosParaCapturar(const Coordenada& c) const;
+		
+	// Generadores 
+		Juego(const Mapa& m); // crearJuego renombrado como constructor
+		void agregarPokemon(const Pokemon& p, const Coordenada& c);
+		void agrgarJugador();
+		void conectarse(Jugador e, const Coordenada& c);
+		void desconectarse(Jugador e);
+		void moverse(Jugador e, const Coordenada& c);
+		
+	// Otras operaciones
+		bool pudoAgregarPokemon(const Coordenada& c);
+		bool hayPokemonCercano(const Coordenada& c) const;
+		const Coordenada& posPokemonCercano(const Coordenada& c) const;
+		const Conj<Jugador>& entrenadoresPosibles(const Coordenada& c, const Conj<Jugador>& j) const;
+		Nat indiceDeRareza(const Pokemon& p) const;
+		
+	private:
+	
+		struct infoMatrizPoke;
+		struct infoJug;
+		struct pokes;
+		struct infoCoord;
+		struct infoPoke;
+		
+		Mapa mapa;
+		Vector<infoJug> jugadores;
+		Conj<Jugador> jugadoresNoExpulsados;
+		Matriz< Conj<Jugador> > matrizJugadores;
+		Matriz<infoMatrizPoke> matrizPokemons;
+		Dicc<Coordenada, infoCoord> posPokemons;
+		DiccTrie<Pokemon, infoPoke> pokemonsTotales;
+		Nat cantidadPokeTotal;
+		
+		struct infoMatrizPoke{
+			bool hayPoke;
+			Dicc<Coordenada, infoCoord>::Iterador iterador;
+		}
+		
+		struct infoJug{
+			bool conectado;
+			Nat sanciones;
+			Coordenada posicion;
+			Conj<pokes> pokemons; //ConjuntoLineal == Conj ??
+			DiccTrie<Pokemon, Conj<pokes> >::Iterador> pokesRapido;
+			HeapModificable::Iterador prioridad; // HeapModificable no es una clase genérica
+			Conj<Jugador>::Iterador posMatriz;
+			Conj<Jugador>::Iterador lugarNoExpulsado;
+		}
+	
+		struct pokes{
+			Pokemon tipo;
+			Nat cant;
+		}
+		
+		struct infoCoord{
+			Pokemon tipo;
+			Nat cantMovCapt;
+			HeapModificable colaPrioridad;
+		}
+		
+		struct infoPoke{
+			Nat cant;
+			Conj< Dicc<Coordenada, infoCoord>::Iterador > pos;
+		}
+		
+		Matriz< Conj<Jugador> >& crearMatrizJug(const Mapa& m);
+		Matriz<infoMatrizPoke>& crearMatrizPoke(const Mapa& m);
+		HeapModificable& crearHeapPokemon(const Coordenada& c);
+		void laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e);
+		void laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e);
+		void laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F);
+		void capturarPokemon(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador Poke);
+		void darlePokemon(Jugador e, Pokemon& p);
+		void expulsarJugador(Jugador e);
+		Nat cantidadPokemons(Jugador e) const;
+		void eliminarPokemons(Jugador e);
+		Nat cantMismaEspecie(const Pokemon& p) const;
+		Nat cantPokemonsTotales(const Pokemon& p) const;
 }
 
-template<class T> 
-typedef Vector<Vector<T> > Matriz; 
-
-class Juego{
-
-    public:
-        
-        Juego(Mapa& m);
-
-        ~Juego();
-
-        void AgregarPokemon(Pokemon p, Coordenada c);
-
-        void AgregarJugador(Jugador j);
-
-        void Conectarse(Jugador j, Coordenada c);
-
-        void Desconectarse(Jugador j);
-        
-        void Moverse(Jugador j, Coordenada c);
-
-        Mapa Mapa() const;
-
-        const_Iterador::Conj<Jugadores> Jugadores() const;
-
-        bool EstaConectado(Jugador j) const;
-
-        Nat Sanciones(Jugador j) const;
-
-        Coordenada Posicion(Jugador j) const;
-
-        const_Iterador::Conj<tupla> Pokemons(Jugador j) const;
-
-        Conj<Jugadores>::Expulsados() const;
-
-        Conj<Coordenada> PosConPokemon() const;
-
-        Pokemon PokemonEnPos(Coordenada c) const;
-
-        Nat CantMovimientosParaCaptura(Coordenada c) const;
-        
-        bool PuedoAgregarPokemon(Coordenada c) const;
-        
-        bool HayPokemonCercano(Coordenada c) const;
-
-        Coordenada PosPokemonCercano(Coordenada c) const;
-
-        Conj<Jugadores> EntrenadoresPosibles(Coordenada c, Conjunto<Jugadores> js) const;
-
-        Nat IndiceDeRareza(Pokemon p) const;
-
-        friend ostream& operator<<(ostream& os, const Juego& j){
-            j.mostrar(os);
-            return os;
-        }
-
-    private:
-        
-        struct infoJug{
-
-            bool conectado;
-
-            Nat sanciones;
-
-            Coordenada posicion;
-
-            Conj<pokes> pokemons;
-
-            DiccString<Iterador::Conj<pokes> > pokesRapido;
-
-            //Iterador::HeapModificable<Nat, Jugador> prioridad;
-            
-            Iterador::Conj<Jugador> posMatriz;
-          
-            Iterador::Conj<Jugador> lugarNoExpulsado;
-
-        }
-
-        struct infoMatrizPoke{
-            
-            bool hayPoke;
-
-            Iterador::Dicc<Coordenada, infoCoord> iterador;
-
-        }
-
-        struct infoCoord{
-            
-            Pokemon tipo;
-
-            Nat cantMovCap;
-
-            //HeapModificable<Nat, Jugador> colaDePrioridad;
-
-        }
-
-        struct infoPoke{
-        
-            Nat cant;
-
-            Conj<Iterrador::Dicc<Coordenada, infoCoor> >
-
-        }
-
-        Mapa mapa;
-        
-        Vector<infoJug> jugadores;
- 
-        Conj<Jugadores> jugadoresNoExpulsados;
-
-        Conj<Jugadores> expulsados;
-
-        Matriz<Conj<Jugadores> > matrizJugadores;        
-
-        Matriz<infoMatrizPoke> matrizPokemons;
-
-        Dicc<Coordenada, infoCoordenada> posPokemons;
-
-        DiccString<infoPoke> pokemonesTotales;
-
-        Nat cantidadPokeTotal;
-
-}
-
-#endif // JUEGO_H_
+#endif
