@@ -51,7 +51,7 @@ class HeapModificable
 		class const_Iterador
 		{
 			public:
-				Iterador();	// CrearIt()
+				const_Iterador();	// CrearIt()
 				bool haySiguiente() const;
 				const JugadorHeap& Siguiente() const;
 				
