@@ -3,8 +3,13 @@
 
 #include "aed2/TiposBasicos.h"
 
+using namespace aed2;
+
 class HeapModificable
 {
+	private:
+		struct Nodo;
+
 	public:
 	
 	    class Iterador;
@@ -13,9 +18,9 @@ class HeapModificable
 		struct JugadorHeap {
 			Nat cantPokes;
 			Nat id;
-		}
+		};
 		
-		bool operator<(const JugadorHeap& a, const JugadorHeap& b); // reemplaza función EsMayor?
+		bool operator<(const JugadorHeap& b); // reemplaza función EsMayor?
 	
 	// Observadores
 		bool esVacia(); // Vacia?()
@@ -23,7 +28,7 @@ class HeapModificable
 		
 	// Generadores
 		HeapModificable(); // Generador Vacia()
-		HeapModificable::Iterador Encolar(const JugadorHeap& a);
+		Iterador Encolar(const JugadorHeap& a);
 		
 	// Otras operaciones
 		void desencolar();
@@ -34,26 +39,26 @@ class HeapModificable
 			public:
 				Iterador();	// CrearIt()
 				bool haySiguiente() const;
-				JugadorHeap& siguiente() const;
+				JugadorHeap& Siguiente() const;
 				void eliminarSiguiente();
 				void agregarComoSiguiente(const JugadorHeap& a);
 				
 			private:
 				Nodo* siguiente;
 				Nodo* heap;
-		}
+		};
 		
 		class const_Iterador
 		{
 			public:
 				Iterador();	// CrearIt()
 				bool haySiguiente() const;
-				const JugadorHeap& siguiente() const;
+				const JugadorHeap& Siguiente() const;
 				
 			private:
 				Nodo* siguiente;
 				Nodo* heap;
-		}
+		};
 		
 	private:
 			
@@ -65,7 +70,7 @@ class HeapModificable
 			Nodo* hijoIzq;
 			Nodo* hijoDer;
 			Nodo* padre;
-		}
+		};
 		
 		Nodo* tope;
 		
@@ -75,6 +80,6 @@ class HeapModificable
 		void siftDown(Nodo* p);
 		void siftUp(Nodo* p);
 		void intercambio(Nodo* padre, Nodo* hijo);
-}
+};
 
 #endif
