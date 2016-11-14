@@ -28,10 +28,10 @@ class HeapModificable
 		
 	// Generadores
 		HeapModificable(); // Generador Vacia()
-		Iterador Encolar(const JugadorHeap& a);
+		Iterador encolar(const JugadorHeap& a);
 		
 	// Otras operaciones
-		void desencolar();
+		void desencolar();	//por algun motivo, esto esta como obs en el tad... ¿?
 	
 	// Iterador
 		class Iterador
