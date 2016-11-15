@@ -48,6 +48,7 @@ class Juego
 		Mapa mapa;
 		Vector<infoJug> jugadores;
 		Conj<Jugador> jugadoresNoExpulsados;
+		Conj<Jugador> expulsados;
 		Matriz< Conj<Jugador> > matrizJugadores;
 		Matriz<infoMatrizPoke> matrizPokemons;
 		Dicc<Coordenada, infoCoord> posPokemons;
@@ -87,7 +88,7 @@ class Juego
 		}
 		
 		Matriz< Conj<Jugador> >& crearMatrizJug(const Mapa& m);
-		Matriz<infoMatrizPoke>& crearMatrizPoke(const Mapa& m);
+		Matriz<infoMatrizPoke>& crearMatrizPokes(const Mapa& m);
 		HeapModificable& crearHeapPokemon(const Coordenada& c);
 		void laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e);
 		void laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e);
