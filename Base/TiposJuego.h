@@ -17,16 +17,16 @@ struct Coordenada
 	}
 };
 
-Nat latitud(const Coordenada& c){
+inline Nat latitud(const Coordenada& c){
 	return c.latitud;
 }
 
-Nat longitud(const Coordenada& c){
+inline Nat longitud(const Coordenada& c){
 	return c.longitud;
 }
 
 
-Nat DistEuclidea(const Coordenada& c1,const Coordenada& c2){
+inline Nat DistEuclidea(const Coordenada& c1,const Coordenada& c2){
 	Nat lon = 0;
 	Nat lat = 0;
 	if (c1.longitud > c2.longitud)
@@ -54,33 +54,33 @@ Nat DistEuclidea(const Coordenada& c1,const Coordenada& c2){
 }
 
 
-Coordenada CoordenadaArriba(const Coordenada& c){
+inline Coordenada CoordenadaArriba(const Coordenada& c){
 	return Coordenada(latitud(c)+1,longitud(c));
 }
 
-Coordenada CoordenadaAbajo(const Coordenada& c){
+inline Coordenada CoordenadaAbajo(const Coordenada& c){
 	return Coordenada(latitud(c)-1,longitud(c));
 } 
 
-Coordenada CoordenadaALaDerecha(const Coordenada& c){
+inline Coordenada CoordenadaALaDerecha(const Coordenada& c){
 	return Coordenada(latitud(c),longitud(c)+1);
 }
-Coordenada CoordenadaALaIzquierda(const Coordenada& c){
+inline Coordenada CoordenadaALaIzquierda(const Coordenada& c){
 	return Coordenada(latitud(c),longitud(c)-1);
 }
 
       
 
-bool operator == (const Coordenada& c1, const Coordenada& c2){
+inline bool operator == (const Coordenada& c1, const Coordenada& c2){
  return c1.latitud == c2.latitud and c1.longitud == c2.longitud;
 }
 
 
-bool operator != (const Coordenada& c1, const Coordenada& c2){
+inline bool operator != (const Coordenada& c1, const Coordenada& c2){
  return not (c1 == c2);
 }
 
-std::ostream& operator<<(std::ostream& os, const Coordenada& c){
+inline std::ostream& operator<<(std::ostream& os, const Coordenada& c){
 	os << '(' << c.latitud << ',' << c.longitud << ')';
 }
 
