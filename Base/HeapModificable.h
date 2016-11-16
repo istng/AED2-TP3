@@ -18,6 +18,7 @@ class HeapModificable
 		struct JugadorHeap {
 			Nat cantPokes;
 			Nat id;
+            JugadorHeap(Nat c, Nat i): cantPokes(c),id(i){}
 		};
 		
 		bool operator<(const JugadorHeap& b); // reemplaza función EsMayor?

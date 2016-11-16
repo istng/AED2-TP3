@@ -57,7 +57,7 @@ class Juego
 		
 		struct infoMatrizPoke{
 			bool hayPoke;
-			Dicc<Coordenada, infoCoord>::Iterador iterador;
+            Iterador::Dicc<Coordenada, infoCoord> iterador;
 		}
 		
 		struct infoJug{
@@ -65,15 +65,17 @@ class Juego
 			Nat sanciones;
 			Coordenada posicion;
 			Conj<pokes> pokemons; //ConjuntoLineal == Conj ??
-			DiccTrie<Pokemon, Conj<pokes> >::Iterador> pokesRapido;
-			HeapModificable::Iterador prioridad; // HeapModificable no es una clase genérica
-			Conj<Jugador>::Iterador posMatriz;
-			Conj<Jugador>::Iterador lugarNoExpulsado;
-		}
+			DiccTrie<Pokemon, Conj<pokes> >::Iterador > pokesRapido;
+            HeapModificable::Iterador prioridad; // HeapModificable no es una clase genérica
+            Conj<Jugador>::Iterador posMatriz;
+            Conj<Jugador>::Iterador lugarNoExpulsado;
+            infoJug(bool c, Nat s, Coordenada p, Conj<pokes> pokes, DiccTrie<Pokemon, Conj<pokes> >::Iterador> pr, HeapModificable::Iterador prioridad, Conj<Jugador>::Iterador posMatriz, 	Conj<Jugador>::Iterador lugarNoExpulsado): conectado(c), sanciones(s), posicion(p), pokemons(pokes), pokesRapido(pr), prioridad(prioridad),posMatriz(posMatriz),lugarNoExpulsado(lugarNoExpulsado){}
+        }
 	
 		struct pokes{
 			Pokemon tipo;
 			Nat cant;
+            pokes(Pokemon p , Nat cant): tipo(p),cant(cant){}
 		}
 		
 		struct infoCoord{
@@ -84,7 +86,7 @@ class Juego
 		
 		struct infoPoke{
 			Nat cant;
-			Conj< Dicc<Coordenada, infoCoord>::Iterador > pos;
+            Conj< Dicc<Coordenada, infoCoord> >::Iterador pos;
 		}
 		
 		Matriz< Conj<Jugador> >& crearMatrizJug(const Mapa& m);
