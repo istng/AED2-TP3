@@ -57,7 +57,7 @@ class Juego
 		
 		struct infoMatrizPoke{
 			bool hayPoke;
-            Iterador::Dicc<Coordenada, infoCoord> iterador;
+            Dicc<Coordenada, infoCoord>::Iterador iterador;
 		}
 		
 		struct infoJug{

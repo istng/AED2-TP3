@@ -51,7 +51,7 @@ Nat AgregarJugador(Jugador j){
     Nat sanciones = 0;
     Coordenada pos = Coordenada(42,42);
     Conj<pokes> pokes = Conj<pokes>();
-    DiccString<Conj<pokes>::Iterador >  pokesRapido = DiccString<Conj<pokes> >::Iterador();
+    DiccString<Conj<pokes>::Iterador >  pokesRapido = DiccString<Conj<pokes> >();
     HeapModificable<Nat,Jugador> >::Iterador posCola = NULL;
     Conj<Jugador>::Iterador posMatriz = NULL;
 
@@ -67,12 +67,26 @@ void Conectarse(Jugador j, Coordenada c){
 
     jugadores[j].estaConectado = true;
     jugadores[j].pos = c;
-    Iterador::Conj<Jugador> itConj = matrizJugadores[c.latitud][c.longitud].AgregarRapido(j);
+    Conj<Jugador>::Iterador itConj = matrizJugadores[c.latitud][c.longitud].AgregarRapido(j);
     jugadores[j].posMatriz = itConj;
     if(hayPokemonCercano(c)){
-        int pokePosi = posPokemonsCercano(c);
+        Coordenada pokePosi = posPokemonsCercano(c);
         JugadorHeap nueva = JugadorHeap(CantidadPokemons(jugadores[j].pokemonsCapturados)j);
         HeapModificable::Iterador itHeap = matrizPokemons[pokePosi.longitud][pokePosi.latitud].colaPrioridad.encolar(nueva);
         jugadores[j].prioridad = itHeap;
+        posPokemons.Significado(pokePosi).cantMovCapt = 0;
+    }
+}
+
+void Desconectarse(Jugador j){
+    jugadores[j].estaConectado = false;
+    jugadores[j].posMatriz.EliminarSiguiente();
+    jugadores[j].posMatriz = NULL;
+    Coordenada c = jugadores[j].pos;
+    if(hayPokemonCercano(c)){
+        Coordenada pokePosi = posPokemonsCercano(c);
+        jugadores[j].prioridad.EliminarSiguiente();
+        jugadores[j].prioridad = NULL;
+        posPokemons.Significado(pokePosi).cantMovCapt = 0;
     }
 }
