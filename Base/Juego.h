@@ -31,11 +31,12 @@ class Juego
 		void moverse(Jugador e, const Coordenada& c);
 		
 	// Otras operaciones
-		bool pudoAgregarPokemon(const Coordenada& c);
-		bool hayPokemonCercano(const Coordenada& c) const;
-		const Coordenada& posPokemonCercano(const Coordenada& c) const;
-		const Conj<Jugador>& entrenadoresPosibles(const Coordenada& c, const Conj<Jugador>& j) const;
-		Nat indiceDeRareza(const Pokemon& p) const;
+        const Conj<Coordenada> CoordARadio(Coordenada c, Nat r) const;
+		bool pudoAgregarPokemon(Coordenada c) const;
+		bool hayPokemonCercano (Coordenada c) const;
+		const Coordenada& posPokemonCercano(Coordenada c) const;
+		const Conj<Jugador> entrenadoresPosibles(Coordenada c) const;
+		Nat indiceDeRareza(Pokemon p) const;
 		
 	private:
 	
@@ -100,8 +101,8 @@ class Juego
 		void expulsarJugador(Jugador e);
 		Nat cantidadPokemons(Jugador e) const;
 		void eliminarPokemons(Jugador e);
-		Nat cantMismaEspecie(const Pokemon& p) const;
-		Nat cantPokemonsTotales(const Pokemon& p) const;
+		Nat cantMismaEspecie(Pokemon p) const;
+		Nat cantPokemonsTotales(Pokemon p) const;
 }
 
 #endif

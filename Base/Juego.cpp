@@ -44,8 +44,99 @@ void agregarPokemon(const Pokemon& p, const Coordenada& c)
 	}
 }
 
+Nat cantMismaEspecie(Pokemon p) const {
+    DiccTrie<Pokemon, infoPoke>::const_Iterador it = pokemonsTotales.CrearIt();
+    while(it.HaySiguiente()){
+        if(it.SiguienteClave()==p){
+            return it.SiguienteSignificado().cant;
+        }
+        it.Avanzar();
+    }    
+}
 
-Nat AgregarJugador(Jugador j){
+const Conj<Coordenada> coordARadio(Coordenada c,Nat r) const{
+    //no se si no la entiendo, pero para mi esto hace cualquier cosa
+    Conj<Coordenada> coords = Conj<Coordenada>();
+    int i,j = 0;
+    if(r <= c.latitud){
+         i = c.latitud - r; 
+    }
+    if(r <= c.longitud){
+         j = c.longitud - r;
+    }
+    while(i <= c.latitud + r){
+         while(j<=c.longitud + r){
+             if(posExistente(Coordenada(i,j),mapa)){
+                 coords.AgregarRapido(Coordenada(i,j))
+             }
+             j++;
+         }
+         i++;
+    }
+    return coords;
+}
+
+bool hayPokemonCercano(Coordenada c) const{
+    if(posExistente(c,mapa)){
+        Conj<Coordenada> posibles = coordARadio(c,25);
+        Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
+        while(it.HaySiguiente()){
+            if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
+                return true;
+            }
+            it.Avanzar();
+        }
+    }
+    return false;    
+}
+
+const Coordenada posPokemonsCercano(Coordenada c) const{
+    if(posExistente(c,mapa)){
+        Conj<Coordenada> posibles = coordARadio(c,25);
+        Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
+        while(it.HaySiguiente()){
+            if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
+                return it.Siguiente();
+            }
+            it.Avanzar();
+        }
+    }
+}
+
+const Conj<Jugador>& entrenadoresPosibles(const Coordenada& c) const{
+    Conj<Jugador> entrenadores = Conj<Jugador>();
+    Conj<Coordenada> posibles = coordARadio(c,25);
+    Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
+    while(it.HaySiguiente()){
+        Conj<Jugador>::const_Iterador itJ = matrizJugadores[it.Siguiente().longitud][it.Siguiente().longitud]
+        while(itJ.HaySiguiente()){
+            entrenadores.AgregarRapido(itJ.Siguiente());
+            itJ.Avanzar();
+        }
+        it.Avanzar();
+    }
+}
+
+Nat indiceDeRareza(Pokemon p) const{
+   return 100 - (100*cantMismaEspecie(p))/cantPokemonsTotales
+}
+
+bool puedoAgregarPokemon(Coordenada c) const{
+   // if(posExistente(c,mapa)){
+   //     Conj<Coordenada> posibles = coordARadio(c,25);
+   //     Conj<Coordenada>::Iterador it = posibles.CrearIt();
+   //     while(it.HaySiguiente()){
+   //         if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
+   //             return false;
+   //         }
+   //     }
+   //     return true;
+   // }
+   // return false;
+   return !hayPokemonCercano(c);    
+}
+
+Nat agregarJugador(Jugador j){
     Nat res = jugadores.Longitud();
     bool estaConectado = false;
     Nat sanciones = 0;
@@ -63,7 +154,7 @@ Nat AgregarJugador(Jugador j){
     return res;
 }
 
-void Conectarse(Jugador j, Coordenada c){
+void conectarse(Jugador j, Coordenada c){
 
     jugadores[j].estaConectado = true;
     jugadores[j].pos = c;
@@ -78,7 +169,7 @@ void Conectarse(Jugador j, Coordenada c){
     }
 }
 
-void Desconectarse(Jugador j){
+void desconectarse(Jugador j){
     jugadores[j].estaConectado = false;
     jugadores[j].posMatriz.EliminarSiguiente();
     jugadores[j].posMatriz = NULL;
