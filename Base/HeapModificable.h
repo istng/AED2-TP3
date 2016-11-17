@@ -19,9 +19,10 @@ class HeapModificable
 			Nat cantPokes;
 			Nat id;
             JugadorHeap(Nat c, Nat i): cantPokes(c),id(i){}
+            
+            bool operator<(const JugadorHeap& b); // reemplaza funci?n EsMayor?
 		};
 		
-		bool operator<(const JugadorHeap& b); // reemplaza función EsMayor?
 	
 	// Observadores
 		bool esVacia(); // Vacia?()
@@ -32,39 +33,41 @@ class HeapModificable
 		Iterador encolar(const JugadorHeap& a);
 		
 	// Otras operaciones
-		void desencolar();	//por algun motivo, esto esta como obs en el tad... ¿?
+		void desencolar();	//por algun motivo, esto esta como obs en el tad... ??
 	
 	// Iterador
 		class Iterador
 		{
 			public:
-				Iterador();	// CrearIt()
+				Iterador(HeapModificable* h, HeapModificable::Nodo* siguiente);	// CrearIt()
 				bool haySiguiente() const;
 				JugadorHeap& Siguiente() const;
 				void eliminarSiguiente();
 				void agregarComoSiguiente(const JugadorHeap& a);
 				
 			private:
+			    HeapModificable* heap;
 				Nodo* siguiente;
-				Nodo* heap;
 		};
 		
 		class const_Iterador
 		{
 			public:
-				const_Iterador();	// CrearIt()
+				const_Iterador(const HeapModificable* h, const HeapModificable::Nodo* siguiente);	// CrearIt()
 				bool haySiguiente() const;
 				const JugadorHeap& Siguiente() const;
 				
 			private:
-				Nodo* siguiente;
-				Nodo* heap;
+			    const HeapModificable* heap;
+				const Nodo* siguiente;
 		};
 		
 	private:
 			
 		struct Nodo
 		{
+		    Nodo(JugadorHeap jh, Nodo* padre);
+		
 			JugadorHeap elemento;
 			Nat ramaMasCorta;
 			Nat ramaMasLarga;
