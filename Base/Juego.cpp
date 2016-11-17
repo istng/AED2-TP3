@@ -286,6 +286,29 @@ void laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador 
 
 void capturarPokemon(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador Poke){
 	Coordenada k = poke.Siguiente().SiguienteClave();
-	//HeapModificable* posibles = 
+	HeapModificable* posibles = poke.Siguiente().SiguienteSignificado().colaPrioridad;
+	Pokemon tipo = poke.Siguiente().SiguienteSignificado().tipo;
+	if (!posibles.esVacia())
+	{
+		Jugador jugGanador = posibles->proximo().id;
+		darlePokemon(jugGanador,tipo);
+		matrizPokemons[k.longitud][k.latitud].hayPoke = false;
+		//este iterador se invalida:
+		//matrizPokemons[k.longitud][k.latitud].iterador
+		poke.Siguiente().EliminarSiguiente();
+		poke.EliminarSiguiente(); 
+	}
+}
+
+void darlePokemon(Jugador e, Pokemon& p){
+	if (jugadores[e].pokesRapido.Definido(p))
+	{
+		Conj<pokes>::Iterador iter = jugadores[e].pokesRapido.Obtener(p);
+		iter.Siguiente().cant = iter.Siguiente().cant + 1; 
+	}
+	else
+	{
+		pokes nuevoPokemon = pokes(p,1);
+	}
 }
 
