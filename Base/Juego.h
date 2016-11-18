@@ -6,7 +6,7 @@
 #include "aed2/Vector.h"
 #include "aed2/Conj.h"
 #include "aed2/Dicc.h"
-#include "DiccString.hpp"
+#include "DiccString.h"
 #include "mapa.hpp"
 #include "HeapModificable.h"
 
@@ -40,7 +40,7 @@ class Juego
 		Nat agregarJugador();
 		void conectarse(Jugador j, const Coordenada& c);
 		void desconectarse(Jugador j);
-		void moverse(Jugador e, const Coordenada& c);
+		void moverse(Jugador e,const Coordenada& c);
 		
 	// Otras operaciones
         const Conj<Coordenada> coordARadio(const Coordenada &c, Nat r) const;
