@@ -161,7 +161,7 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 
 // Otras operaciones
 
-const Conj<Coordenada> Juego::coordARadio(Coordenada c, Nat r) const{
+const Conj<Coordenada> Juego::coordARadio(const Coordenada &c, Nat r) const{
     //no se si no la entiendo, pero para mi esto hace cualquier cosa
     Conj<Coordenada> coords = Conj<Coordenada>();
     Nat i,j = 0;
@@ -183,7 +183,7 @@ const Conj<Coordenada> Juego::coordARadio(Coordenada c, Nat r) const{
     return coords;
 }
 
-bool Juego::pudoAgregarPokemon(Coordenada c) const{
+bool Juego::pudoAgregarPokemon(const Coordenada& c) const{
    // if(posExistente(c,mapa)){
    //     Conj<Coordenada> posibles = coordARadio(c,25);
    //     Conj<Coordenada>::Iterador it = posibles.CrearIt();
@@ -198,7 +198,7 @@ bool Juego::pudoAgregarPokemon(Coordenada c) const{
    return !hayPokemonCercano(c);    
 }
 
-bool Juego::hayPokemonCercano(Coordenada c) const{
+bool Juego::hayPokemonCercano(const Coordenada& c) const{
     if(_mapa.posExistente(c)){
         Conj<Coordenada> posibles = coordARadio(c,25);
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
@@ -212,7 +212,7 @@ bool Juego::hayPokemonCercano(Coordenada c) const{
     return false;    
 }
 
-const Coordenada& Juego::posPokemonCercano(Coordenada c) const{
+const Coordenada& Juego::posPokemonCercano(const Coordenada& c) const{
     if(_mapa.posExistente(c)){
         Conj<Coordenada> posibles = coordARadio(c,25);
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
@@ -240,13 +240,13 @@ const Conj<Jugador>& Juego::entrenadoresPosibles(const Coordenada& c) const{
 	return *entrenadores;
 }
 
-Nat Juego::indiceDeRareza(Pokemon p) const{
+Nat Juego::indiceDeRareza(const Pokemon& p) const{
    return 100 - (100*cantMismaEspecie(p))/cantidadPokeTotal;
 }
 
 
 // privado
-Vector< Vector< Conj<Jugador> > >& Juego::crearMatrizJug(const Mapa& m)
+Vector< Vector< Conj<Jugador> > >& Juego::crearMatrizJug(const Mapa& m) const
 {
 	Vector< Vector< Conj<Jugador> > >* res = new Vector< Vector< Conj<Jugador> > >();
 	Conj<Coordenada>::const_Iterador it = m.coordenadas();
@@ -273,7 +273,7 @@ Vector< Vector< Conj<Jugador> > >& Juego::crearMatrizJug(const Mapa& m)
 	return *res;
 }
 
-Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m)
+Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m) const
 {
 	Vector< Vector<infoMatrizPoke> >* res = new Vector< Vector<infoMatrizPoke> >();
 	Conj<Coordenada>::const_Iterador it = m.coordenadas();
@@ -302,8 +302,27 @@ Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m)
 
 HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
 {
-	HeapModificable* hm = new HeapModificable();
-	return *hm;
+	HeapModificable* pokeHeap = new HeapModificable();
+	Nat i = -2;
+	while(i <= 2){
+		Nat j = -2;
+		while(j <= 2){
+			Coordenada coorJug = Coordenada(c.longitud + i, c.latitud + j);
+			if(_mapa.posExistente(coorJug) && DistEuclidea(c, coorJug) <= 2){
+				Conj<Jugador>::Iterador itJugHeap = matrizJugadores[i][j].CrearIt();
+				while(itJugHeap.HaySiguiente()){
+					Nat id = itJugHeap.Siguiente();
+					HeapModificable::Iterador itPokeHeap = pokeHeap->encolar(HeapModificable::JugadorHeap(cantidadPokemons(id), id));
+					_jugadores[id].prioridad = itPokeHeap;
+					itJugHeap.Avanzar();
+				}
+			}
+			++j;
+		}
+		++i;
+	}
+	
+	return *pokeHeap;
 }
 
 void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
@@ -326,7 +345,7 @@ void Juego::capturarPokemon(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Itera
 	
 }
 
-void Juego::darlePokemon(Jugador e, Pokemon& p)
+void Juego::darlePokemon(Jugador e, const Pokemon& p)
 {
 	
 }
@@ -338,7 +357,13 @@ void Juego::expulsarJugador(Jugador e)
 
 Nat Juego::cantidadPokemons(Jugador e) const
 {
-	return 0;
+	Nat res = 0;
+	Conj<pokes>::const_Iterador iter = pokemons(e);
+	while(iter.HaySiguiente()){
+		res += iter.Siguiente().cant;
+		iter.Avanzar();
+	}
+	return res;
 }
 
 void Juego::eliminarPokemons(Jugador e)
@@ -351,7 +376,7 @@ Nat Juego::cantPokemonsTotales() const
 	return cantidadPokeTotal;
 }
 
-Nat Juego::cantMismaEspecie(Pokemon p) const {
+Nat Juego::cantMismaEspecie(const Pokemon& p) const {
 	/*
     DiccString<infoPoke>::const_Iterador it = pokemonsTotales.CrearIt();
     while(it.HaySiguiente()){
