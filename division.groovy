@@ -1,4 +1,4 @@
-
+https://www.youtube.com/watch?v=EYYdQB0mkEU
 
 coordenada trivial -> Juan
 
