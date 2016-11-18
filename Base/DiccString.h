@@ -74,7 +74,7 @@ class DiccString {
                 * Devuelve las claves del diccionario.
                 --NO PRODUCE ALIASING--
                 **/
-                const aed2::Conj<string>& Claves() const;
+                aed2::Conj<string>& Claves();
 
 
         private:
@@ -256,7 +256,7 @@ const T& DiccString<T>::Obtener(const string& clave) const {
 
 
 template <typename T>
-const Conj<string>& DiccString<T>::Claves() const{
+Conj<string>& DiccString<T>::Claves() {
     return claves;
 }
 
