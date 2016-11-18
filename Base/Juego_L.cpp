@@ -156,6 +156,47 @@ void Juego::desconectarse(Jugador j){
 
 void Juego::moverse(Jugador e, const Coordenada& c)
 {
+	Coordenada I = _jugadores[e].posicion;
+	Coordenada F = c;
+	Conj<Pokemon>::Iterador poke = (_pokemonsTotales.claves()).CrearIt();
+	while(poke.HaySiguiente())
+	{
+		Conj<Coordenada>::Iterador posPoke = (_pokemonsTotales.Obtener(poke.Siguiente())).CrearIt();
+		while(posPoke.HaySiguiente())
+		{
+			if (posPoke.Siguiente().SiguienteClave() == I)
+			{
+				LaCoordendaEsInicio(posPoke,I,F,e,j);
+			}
+			else if (posPoke.Siguiente().SiguienteClave() == F)
+			{
+				LaCoordendaEsFinal(posPoke,I,F,e,j);
+			}
+			else  
+			{
+				LaCoordendaEsFinal(posPoke,I,F,e,j);
+			}
+
+			// fijarse donde se avanza posPoke!
+		}
+		poke.Avanzar();
+	}
+
+	EliminarSiguiente(jugadores[e].posMatriz());
+	_jugadore[e].posMatriz = _matrizJugadores[c.longitud][c.latitud].AgregarRapido(e);
+	_jugadores[e].posicion = c;
+	if ( DistEuclidea(I,F) >= 100 )
+	{
+		if (! mapa.hayCamino(I,F))
+		{
+			_jugadores[e].sanciones = _jugadores[e].sanciones + 1;
+		}
+	}
+	
+	if(_jugadores[e].sanciones >= 5 )
+	{
+		expulsarJugador(e);
+	}
 	
 }
 
@@ -327,31 +368,109 @@ HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
 
 void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
+	Coordenada k = posPoke.Siguiente().SiguienteClave();
+	if (hayPokemonCercano(k) && hayPokemonCercano(F,j))
+	{
+		if (posPokemonsCercano(k) !=  posPokemonsCercano(F))
+		{
+			posPoke.Siguiente().SiguienteSignificado().cantMovCapt = 0;
+		}
+	}
+	//Aca avanzamos posPoke 
+	Avanzar(posPoke);
 	
 }
 
 void Juego::laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
+	Coordenada k = posPoke.Siguiente().SiguienteClave();
+	if (hayPokemonCercano(k) && hayPokemonCercano(I))
+	{
+		if (posPokemonsCercano(k) = posPokemonsCercano(I))
+		{
+			posPoke.Siguiente().SiguienteSignificado().cantMovCapt = 0;
+			JugadorHeap jug = JugadorHeap(CantidadPokemons(e),e);
+			HeapModificable* heap =  posPoke.Siguiente().SiguienteSignificado().colaPrioridad;
+			_jugadores[e].prioridad.EliminarSiguiente();
+			_jugadores[e].prioridad = &heap.encolar(jug);
+		}
+		if (!hayPokemonCercano(I))
+		{
+			posPoke.Siguiente().SiguienteSignificado().cantMovCapt = 0;
+			JugadorHeap jug = JugadorHeap(CantidadPokemons(e),e);
+			HeapModificable* heap =  posPoke.Siguiente().SiguienteSignificado().colaPrioridad;
+			_jugadores[e].prioridad = &heap.encolar(jug);
+		}
+	}
+	posPoke.Avanzar();
 	
 }
 
 void Juego::laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F)
 {
+	Coordenada k = posPoke.Siguiente().SiguienteClave();
+	if (hayPokemonCercano(k) && posPoke.Siguiente().SiguienteSignificado().cantMovCapt == 9)		
+	{
+		capturarPokemon(posPoke);
+	}
+	else if (hayPokemonCercano(k) && posPoke.Siguiente().SiguienteSignificado().cantMovCapt < 9)
+	{
+		posPoke.Siguiente().SiguienteSignificado().cantMovCapt = posPoke.Siguiente().SiguienteSignificado().cantMovCapt + 1;
+	}
+
+	posPoke.Avanzar();
 	
 }
 
 void Juego::capturarPokemon(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador Poke)
 {
+	Coordenada k = poke.Siguiente().SiguienteClave();
+	HeapModificable* posibles = poke.Siguiente().SiguienteSignificado().colaPrioridad;
+	Pokemon tipo = poke.Siguiente().SiguienteSignificado().tipo;
+	if (!posibles.esVacia())
+	{
+		Jugador jugGanador = posibles->proximo().id;
+		darlePokemon(jugGanador,tipo);
+		_matrizPokemons[k.longitud][k.latitud].hayPoke = false;
+		//este iterador se invalida:
+		//matrizPokemons[k.longitud][k.latitud].iterador
+		poke.Siguiente().EliminarSiguiente();
+		poke.EliminarSiguiente(); 
+	}
 	
 }
 
 void Juego::darlePokemon(Jugador e, const Pokemon& p)
 {
+	if (_jugadores[e].pokesRapido.Definido(p))
+	{
+		Conj<pokes>::Iterador iter = _jugadores[e].pokesRapido.Obtener(p);
+		iter.Siguiente().cant = iter.Siguiente().cant + 1; 
+	}
+	else
+	{
+		pokes nuevoPokemon = pokes(p,1);
+		Conj<pokes>::Iterador iter = _jugadores[e].pokemons.AgregarRapido(nuevoPokemon);
+		_jugadore[e].pokesRapido.Definir(p,iter);
+	}
 	
 }
 
 void Juego::expulsarJugador(Jugador e)
 {
+	cantidadPo69keTotal = cantidadPokeTotal - cantidadPokemons(e);
+	eliminarPokemons(e);
+	_jugadores[e].posMatriz.EliminarSiguiente();
+	if (_juagadores[e].prioridad.HaySiguiente())
+	{
+		_jugadores[e].prioridad.EliminarSiguiente();
+	}
+	_jugadores[e].conectado = false;
+	Conj<Jugador>::Iterador expulsarJ = _juagadores[e].lugarNoExpulsado;
+	//juagadores[e].lugarNoExpulsado = NULL
+	expulsarJ.EliminarSiguiente();
+	expulsados.AgregarRapido(e);	
+
 	
 }
 
@@ -368,6 +487,18 @@ Nat Juego::cantidadPokemons(Jugador e) const
 
 void Juego::eliminarPokemons(Jugador e)
 {
+	Conj<Juego::pokes>::Iterador iter = pokemons(e);
+	while(iter.HaySiguiente())
+	{
+		Pokemon tipo = iter.Siguiente().tipo;
+		_pokemonsTotales.Obtener(pokemon).cant = _pokemonsTotales.Obtener(pokemon).cant - iter.Siguiente().cant;
+		if (_pokemonsTotales.Obtener().cant == 0)
+		{
+			_pokemonsTotales.Borrar(pokemon);
+			iter.EliminarSiguiente();
+
+		}
+	}
 	
 }
 
