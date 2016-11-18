@@ -34,6 +34,9 @@ class HeapModificable
 		
 	// Otras operaciones
 		void desencolar();	//por algun motivo, esto esta como obs en el tad... ??
+		
+	// Destructor
+	    ~HeapModificable();
 	
 	// Iterador
 		class Iterador
@@ -66,7 +69,7 @@ class HeapModificable
 			
 		struct Nodo
 		{
-		    Nodo(JugadorHeap jh, Nodo* padre);
+		    Nodo(JugadorHeap jh, Nat rmc, Nat rml, Nodo* hI, Nodo* hD, Nodo* padre);
 		
 			JugadorHeap elemento;
 			Nat ramaMasCorta;

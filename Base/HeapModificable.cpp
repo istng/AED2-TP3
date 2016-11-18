@@ -27,17 +27,17 @@ HeapModificable::Iterador HeapModificable::encolar(const JugadorHeap& a)
 {
     Nodo* siguienteIt;
 	if(tope == NULL){
-		tope = new Nodo(a, NULL);
+		tope = new Nodo(a, 0, 0, NULL, NULL, NULL);
 		siguienteIt = tope;
 	}
 	else {
 		Nodo* ftrPadre = futuroPadre();
 		if(ftrPadre->hijoIzq == NULL){
-			ftrPadre->hijoIzq = new Nodo(a, ftrPadre);
+			ftrPadre->hijoIzq = new Nodo(a, 0, 0, NULL, NULL, NULL);
 			ftrPadre = ftrPadre->hijoIzq;
 		}
 		else {
-			ftrPadre->hijoDer = new Nodo(a, ftrPadre);
+			ftrPadre->hijoDer = new Nodo(a, 0, 0, NULL, NULL, NULL);
 			ftrPadre = ftrPadre->hijoDer;
 		}
 		corregirProfundidad(ftrPadre->padre);
@@ -77,6 +77,14 @@ void HeapModificable::desencolar()
 		siftDown(tope);
 	}
 	delete destruir;
+}
+
+// Destructor
+HeapModificable::~HeapModificable()
+{
+    while(tope != NULL){
+        desencolar();
+    }
 }
 
 // Iterador
@@ -276,8 +284,6 @@ void HeapModificable::intercambio(Nodo* padre, Nodo* hijo)
 
 // Nodo
 
-HeapModificable::Nodo::Nodo(JugadorHeap jh, Nodo* padre)
-    : elemento(jh), ramaMasCorta(0), ramaMasLarga(0), hijoIzq(NULL), hijoDer(NULL), padre(padre)
+HeapModificable::Nodo::Nodo(JugadorHeap jh, Nat rmc, Nat rml, Nodo* hI, Nodo* hD, Nodo* padre)
+    : elemento(jh), ramaMasCorta(rmc), ramaMasLarga(rml), hijoIzq(hI), hijoDer(hD), padre(padre)
 {}
-
-int main(){return 0;}
