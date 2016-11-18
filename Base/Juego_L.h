@@ -88,18 +88,12 @@ class Juego
 			Nat sanciones;
 			Coordenada posicion;
 			Conj<Juego::pokes> pokemons; //ConjuntoLineal == Conj ??
-			DiccString<Conj<Juego::pokes> > pokesRapido;
+			DiccString<Conj<Juego::pokes>::Iterador > pokesRapido;
             HeapModificable::Iterador prioridad; // HeapModificable no es una clase gen�rica
             Conj<Jugador>::Iterador posMatriz;
             Conj<Jugador>::Iterador lugarNoExpulsado;
 			
-		/*	infoJug(Jugador e, Conj<Jugador>::Iterador itNoExpulsado)
-			 : conectado(false), sanciones(0), posicion(Coordenada(42,42)), pokemons(Conj<pokes>()), 
-			 pokesRapido(DiccString<Conj<Juego::pokes> >()), prioridad(HeapModificable::Iterador(NULL,NULL)),
-			 posMatriz(Conj<Jugador>::Iterador()), lugarNoExpulsado(itNoExpulsado)
-			 {};
-			*/
-            infoJug(bool c, Nat s, Coordenada p, Conj<pokes> pokes, DiccString<Conj<Juego::pokes> > pr, HeapModificable::Iterador prior, Conj<Jugador>::Iterador pMatriz, Conj<Jugador>::Iterador lugarNoExp) 
+            infoJug(bool c, Nat s, Coordenada p, Conj<pokes> pokes, DiccString<Conj<Juego::pokes>::Iterador > pr, HeapModificable::Iterador prior, Conj<Jugador>::Iterador pMatriz, Conj<Jugador>::Iterador lugarNoExp) 
 				: conectado(c), sanciones(s), posicion(p), pokemons(pokes), pokesRapido(pr), prioridad(prior), posMatriz(pMatriz), lugarNoExpulsado(lugarNoExp) {};
         };
 	
@@ -126,7 +120,7 @@ class Juego
 		Nat cantidadPokemons(Jugador e) const;
 		void eliminarPokemons(Jugador e);
 		Nat cantMismaEspecie(Pokemon p) const;
-		Nat cantPokemonsTotales(Pokemon p) const;
+		Nat cantPokemonsTotales() const;
 };
 
 #endif

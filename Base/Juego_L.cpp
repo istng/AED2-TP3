@@ -111,7 +111,7 @@ Nat Juego::agregarJugador(){
     Nat sanciones = 0;
     Coordenada pos = Coordenada(42,42);
     Conj<Juego::pokes> pokes = Conj<Juego::pokes>();
-    DiccString< Conj<Juego::pokes> > pokesRapido = DiccString<Conj<Juego::pokes> >();
+    DiccString< Conj<Juego::pokes>::Iterador > pokesRapido = DiccString<Conj<Juego::pokes>::Iterador >();
     HeapModificable::Iterador posCola = HeapModificable::Iterador(NULL,NULL);
     Conj<Jugador>::Iterador posMatriz = Conj<Jugador>::Iterador();
 
@@ -134,10 +134,7 @@ void Juego::conectarse(Jugador j, const Coordenada& c){
     _jugadores[j].posMatriz = itConj;
     if(hayPokemonCercano(c)){
         Coordenada pokePosi = posPokemonCercano(c);
-        
-        HeapModificable::JugadorHeap nueva = HeapModificable::JugadorHeap(0,0);// HACER!!!!!!
-        //HeapModificable::JugadorHeap nueva = HeapModificable::JugadorHeap(CantidadPokemons(_jugadores[j].pokemons), j); // FALTA FUNCIÓN CantidadPokemons
-        
+        HeapModificable::JugadorHeap nueva = HeapModificable::JugadorHeap(cantidadPokemons(j), j);
         HeapModificable::Iterador itHeap = matrizPokemons[pokePosi.longitud][pokePosi.latitud].iterador.SiguienteSignificado().colaPrioridad.encolar(nueva);
         _jugadores[j].prioridad = itHeap;
         posPokemons.Significado(pokePosi).cantMovCapt = 0;
@@ -349,13 +346,12 @@ void Juego::eliminarPokemons(Jugador e)
 	
 }
 
-Nat Juego::cantPokemonsTotales(Pokemon p) const
+Nat Juego::cantPokemonsTotales() const
 {
-	return 0;
+	return cantidadPokeTotal;
 }
 
 Nat Juego::cantMismaEspecie(Pokemon p) const {
-	// NO HAY ITERADOR PARA DiccString
 	/*
     DiccString<infoPoke>::const_Iterador it = pokemonsTotales.CrearIt();
     while(it.HaySiguiente()){
@@ -365,7 +361,8 @@ Nat Juego::cantMismaEspecie(Pokemon p) const {
         it.Avanzar();
     }   
 	*/
-	return 0;
+	//DiccString no tiene iterador, y mejor usar obtener directamente
+	return pokemonsTotales.Obtener(p).cant;
 }
 
 #endif
