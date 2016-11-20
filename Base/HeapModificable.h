@@ -208,10 +208,10 @@ void HeapModificable::Iterador::eliminarSiguiente()
 	cout << endl << "elsig" << __LINE__ << endl;
 	Nodo* ultimoNodo = (*heap).tope;
 	cout << "elsig" << __LINE__ << endl;
-	if ((*ultimoNodo).hijoIzq == NULL && (*ultimoNodo).hijoDer == NULL)
+	if ((*heap).tope == siguiente)
 	{
 		cout << "elsig" << __LINE__ << endl;
-		(*heap).tope = NULL;
+		(*heap).desencolar();
 	}
 	else
 	{
