@@ -1,5 +1,5 @@
-#ifndef TP3_JUEGO_
-#define TP3_JUEGO_
+#ifndef JUEGO_H
+#define JUEGO_H
 
 #include "TiposJuego.h" 
 #include "aed2/TiposBasicos.h"
@@ -7,7 +7,7 @@
 #include "aed2/Conj.h"
 #include "aed2/Dicc.h"
 #include "DiccString.h"
-#include "mapa.hpp"
+#include "Mapa.h"
 #include "HeapModificable.h"
 
 using namespace aed2;

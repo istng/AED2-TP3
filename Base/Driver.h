@@ -5,6 +5,7 @@
 #include "aed2/Dicc.h"
 #include "aed2/TiposBasicos.h"
 #include "TiposJuego.h"
+#include "Juego.h"
 
 using namespace aed2;
 
@@ -120,6 +121,12 @@ class Driver {
 	 * con el cuál interactuar. Además, pueden declarar todas las		   *
 	 * funciones auxiliares que les hagan falta.							*
 	 ************************************************************************/  
+
+	Juego juego;
+
+
+	Mapa DameMapa(const Conj<Coordenada>& cs) const;
+
 
 }; // class Driver
 
