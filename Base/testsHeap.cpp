@@ -71,21 +71,30 @@ void eliminar_siguiente()
 		//cout << j2.cantPokes << " " << j2.id << endl;
 		//cout << endl << "encolado 3" << endl;
 	h.encolar(j3);
-	cout << endl << "elsig1" << endl;
+	
+	//cout << endl << "elsig1" << endl;
 	itj1.eliminarSiguiente();
-	cout << "elsig2" << endl;
+	//cout << h.proximo().cantPokes << " " << h.proximo().id << endl;
+	//cout << j2.cantPokes << " " << j2.id << endl;
+	
+	//cout << "elsig2" << endl;
 	ASSERT(jugHeapIgual(h.proximo(), j2));
-	cout << "elsig3" << endl;
+
+	//cout << "elsig3" << endl;
 	h.desencolar();
-	cout << "elsig4" << endl;
+	//cout << h.proximo().cantPokes << " " << h.proximo().id << endl;
+	//cout << j0.cantPokes << " " << j0.id << endl;
+	
+	//cout << "elsig4" << endl;
 	ASSERT(jugHeapIgual(h.proximo(), j0));
-	cout << "elsig5" << endl;
+	//cout << "elsig5" << endl;
 	h.desencolar();
-	cout << "elsig6" << endl;
+	//cout << "elsig6" << endl;
 	ASSERT(jugHeapIgual(h.proximo(), j3));
-	cout << "elsig7" << endl;
+	//cout << "elsig7" << endl;
 	h.desencolar();
-	cout << "elsig8" << endl;
+	//cout << "elsig8" << endl;
+	
 	ASSERT(h.esVacia());
 
 }
