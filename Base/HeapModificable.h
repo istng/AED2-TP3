@@ -159,7 +159,7 @@ HeapModificable::Iterador HeapModificable::encolar(const JugadorHeap& a)
 // Otras operaciones
 void HeapModificable::desencolar()
 {
-	cout << "YO SOY: " << tope->elemento.id << endl;
+	//cout << "YO SOY: " << nombre << endl;
 	//cout << endl << "desenc" << __LINE__ << endl;
 	Nodo* destruir = tope;
 	//cout << "desenc" << __LINE__ << endl;
@@ -196,6 +196,10 @@ void HeapModificable::desencolar()
 		//cout << "desenc" << __LINE__ << endl;
 
 		tope = ultNodo;
+
+		if ((*tope).hijoDer != NULL) (*(*tope).hijoDer).padre = tope;
+		if ((*tope).hijoIzq != NULL) (*(*tope).hijoIzq).padre = tope;
+
 		//cout << "desenc" << __LINE__ << endl;
 
 		if ((*tope).hijoIzq != NULL || (*tope).hijoDer != NULL)
