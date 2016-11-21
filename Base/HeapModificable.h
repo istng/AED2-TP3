@@ -205,64 +205,64 @@ HeapModificable::JugadorHeap& HeapModificable::Iterador::Siguiente() const
 
 void HeapModificable::Iterador::eliminarSiguiente()
 {
-	cout << endl << "elsig" << __LINE__ << endl;
+	//cout << endl << "elsig" << __LINE__ << endl;
 	Nodo* ultimoNodo = (*heap).tope;
-	cout << "elsig" << __LINE__ << endl;
+	//cout << "elsig" << __LINE__ << endl;
 	if ((*heap).tope == siguiente)
 	{
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*heap).desencolar();
 	}
 	else
 	{
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		ultimoNodo = heap->ultimoNodo();	//en diseño: quedo de c, era del heap del it
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		Nodo* padreUlt = (*ultimoNodo).padre;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		if ((*padreUlt).hijoDer == ultimoNodo)
 		{
-			cout << "elsig" << __LINE__ << endl;
+			//cout << "elsig" << __LINE__ << endl;
 			(*padreUlt).hijoDer = NULL;
 		}
 		else
 		{
-			cout << "elsig" << __LINE__ << endl;
+			//cout << "elsig" << __LINE__ << endl;
 			(*padreUlt).hijoIzq = NULL;
 		}
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		heap->corregirProfundidad(padreUlt);	//idem
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).padre = (*siguiente).padre;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).hijoIzq = (*siguiente).hijoIzq;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).hijoDer = (*siguiente).hijoDer;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).ramaMasCorta = (*siguiente).ramaMasCorta;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).ramaMasLarga = (*siguiente).ramaMasLarga;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		if ((*siguiente).padre != NULL)
 		{
 			if ((*(*siguiente).padre).hijoIzq == siguiente)
 			{
-				cout << "elsig" << __LINE__ << endl;
+				//cout << "elsig" << __LINE__ << endl;
 				(*(*siguiente).padre).hijoIzq = ultimoNodo;
 			}
 			else
 			{
-				cout << "elsig" << __LINE__ << endl;
+				//cout << "elsig" << __LINE__ << endl;
 				(*(*siguiente).padre).hijoDer = ultimoNodo;
 			}
 		}
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		delete siguiente;
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		heap->siftDown(ultimoNodo);
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 		heap->siftUp(ultimoNodo);
-		cout << "elsig" << __LINE__ << endl;
+		//cout << "elsig" << __LINE__ << endl;
 	}
 }
 
@@ -399,27 +399,27 @@ void HeapModificable::siftDown(Nodo* p)
 
 void HeapModificable::siftUp(Nodo* p)
 {
-	cout << "siftup" << __LINE__ << endl;
+	//cout << "siftup" << __LINE__ << endl;
 	if ((*p).padre == NULL){
-		cout << "siftup" << __LINE__ << endl;
+		//cout << "siftup" << __LINE__ << endl;
 		tope = p;
 	}
 	else{
-		cout << "siftup" << __LINE__ << endl;
+		//cout << "siftup" << __LINE__ << endl;
 		Nodo* swap = p;
-		cout << "siftup" << __LINE__ << endl;
+		//cout << "siftup" << __LINE__ << endl;
 		if(p->elemento < (p->padre)->elemento){
-			cout << "siftup" << __LINE__ << endl;
+			//cout << "siftup" << __LINE__ << endl;
 		    swap = p->padre;
 	    }
-	    cout << "siftup" << __LINE__ << endl;
+	    //cout << "siftup" << __LINE__ << endl;
 	    bool juab = p != swap;
-	    cout << juab << endl;
-	    cout << "siftup" << __LINE__ << endl;
+	    //cout << juab << endl;
+	    //cout << "siftup" << __LINE__ << endl;
     	if(p != swap){
-    		cout << "siftup" << __LINE__ << endl;
+    		//cout << "siftup" << __LINE__ << endl;
 	    	intercambio(swap, p);
-	    	cout << "siftup" << __LINE__ << endl;
+	    	//cout << "siftup" << __LINE__ << endl;
 		    siftUp(p);
 	    }
 	}
