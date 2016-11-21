@@ -3,10 +3,10 @@
 
 #include "aed2/TiposBasicos.h"
 
-#include <iostream>
 #include "mini_test.h"
 
-using namespace std; 
+#include <iostream>
+using namespace std;
 
 using namespace aed2;
 
@@ -121,62 +121,90 @@ HeapModificable::HeapModificable() : tope(NULL) {}
 
 HeapModificable::Iterador HeapModificable::encolar(const JugadorHeap& a)
 {
+	cout << "enc" << __LINE__ << endl;
     Nodo* siguienteIt;
-
+    cout << "enc" << __LINE__ << endl;
 	if(tope == NULL){
+		cout << "enc" << __LINE__ << endl;
 		tope = new Nodo(a, 0, 0, NULL, NULL, NULL);
+		cout << "enc" << __LINE__ << endl;
 		siguienteIt = tope;
 	}
 	else {
+		cout << "enc" << __LINE__ << endl;
 		Nodo* ftrPadre = futuroPadre();
+		cout << "enc" << __LINE__ << endl;
 		if(ftrPadre->hijoIzq == NULL){
+			cout << "enc" << __LINE__ << endl;
 			ftrPadre->hijoIzq = new Nodo(a, 0, 0, NULL, NULL, ftrPadre);
+			cout << "enc" << __LINE__ << endl;
 			ftrPadre = ftrPadre->hijoIzq;
 		}
 		else {
+			cout << "enc" << __LINE__ << endl;
 			ftrPadre->hijoDer = new Nodo(a, 0, 0, NULL, NULL, ftrPadre);
+			cout << "enc" << __LINE__ << endl;
 			ftrPadre = ftrPadre->hijoDer;
 		}
 		corregirProfundidad(ftrPadre->padre);
+		cout << "enc" << __LINE__ << endl;
 		siftUp(ftrPadre);
+		cout << "enc" << __LINE__ << endl;
 		siguienteIt = ftrPadre;
 	}
+	cout << "enc" << __LINE__ << endl;
 	return Iterador(this, siguienteIt);
 }
 
 // Otras operaciones
 void HeapModificable::desencolar()
 {
+	cout << endl << "desenc" << __LINE__ << endl;
 	Nodo* destruir = tope;
-
+	cout << "desenc" << __LINE__ << endl;
 	if ((*tope).hijoIzq == NULL && (*tope).hijoDer == NULL)
 	{
+		cout << "desenc" << __LINE__ << endl;
 		tope = NULL;
 	}
 	else
 	{
+		cout << "desenc" << __LINE__ << endl;
 		Nodo* ultNodo = ultimoNodo();
+		cout << "desenc" << __LINE__ << endl;
 		Nodo* padreUlt = (*ultNodo).padre;
-		
+		cout << "desenc" << __LINE__ << endl;
+		bool nullelme = padreUlt == tope;
+		cout << nullelme << endl;
 		if ((*padreUlt).hijoDer == ultNodo)	(*padreUlt).hijoDer = NULL;
 		else (*padreUlt).hijoIzq = NULL;
+		cout << "desenc" << __LINE__ << endl;
 
 		corregirProfundidad(padreUlt);
+		cout << "desenc" << __LINE__ << endl;
 
 		(*ultNodo).padre = NULL;
+		cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).hijoIzq = (*tope).hijoIzq;
+		cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).hijoDer = (*tope).hijoDer;
+		cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).ramaMasCorta = (*tope).ramaMasCorta;
+		cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).ramaMasLarga = (*tope).ramaMasLarga;
+		cout << "desenc" << __LINE__ << endl;
 
 		tope = ultNodo;
+		cout << "desenc" << __LINE__ << endl;
 
 		if ((*tope).hijoIzq != NULL || (*tope).hijoDer != NULL)
 		{
+			cout << "desenc" << __LINE__ << endl;
 			siftDown(tope);
 		}
 	}
-	
+
+	cout << "desenc" << __LINE__ << endl;
 	delete destruir;
 }
 
@@ -205,64 +233,47 @@ HeapModificable::JugadorHeap& HeapModificable::Iterador::Siguiente() const
 
 void HeapModificable::Iterador::eliminarSiguiente()
 {
-	//cout << endl << "elsig" << __LINE__ << endl;
+
 	Nodo* ultimoNodo = (*heap).tope;
-	//cout << "elsig" << __LINE__ << endl;
+
 	if ((*heap).tope == siguiente)
 	{
-		//cout << "elsig" << __LINE__ << endl;
 		(*heap).desencolar();
 	}
 	else
 	{
-		//cout << "elsig" << __LINE__ << endl;
 		ultimoNodo = heap->ultimoNodo();	//en diseño: quedo de c, era del heap del it
-		//cout << "elsig" << __LINE__ << endl;
 		Nodo* padreUlt = (*ultimoNodo).padre;
-		//cout << "elsig" << __LINE__ << endl;
 		if ((*padreUlt).hijoDer == ultimoNodo)
 		{
-			//cout << "elsig" << __LINE__ << endl;
 			(*padreUlt).hijoDer = NULL;
 		}
 		else
 		{
-			//cout << "elsig" << __LINE__ << endl;
 			(*padreUlt).hijoIzq = NULL;
 		}
-		//cout << "elsig" << __LINE__ << endl;
 		heap->corregirProfundidad(padreUlt);	//idem
-		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).padre = (*siguiente).padre;
-		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).hijoIzq = (*siguiente).hijoIzq;
-		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).hijoDer = (*siguiente).hijoDer;
-		//cout << "elsig" << __LINE__ << endl;
 		(*ultimoNodo).ramaMasCorta = (*siguiente).ramaMasCorta;
-		//cout << "elsig" << __LINE__ << endl;
+
 		(*ultimoNodo).ramaMasLarga = (*siguiente).ramaMasLarga;
-		//cout << "elsig" << __LINE__ << endl;
+
 		if ((*siguiente).padre != NULL)
 		{
 			if ((*(*siguiente).padre).hijoIzq == siguiente)
 			{
-				//cout << "elsig" << __LINE__ << endl;
 				(*(*siguiente).padre).hijoIzq = ultimoNodo;
 			}
 			else
 			{
-				//cout << "elsig" << __LINE__ << endl;
 				(*(*siguiente).padre).hijoDer = ultimoNodo;
 			}
 		}
-		//cout << "elsig" << __LINE__ << endl;
 		delete siguiente;
-		//cout << "elsig" << __LINE__ << endl;
 		heap->siftDown(ultimoNodo);
-		//cout << "elsig" << __LINE__ << endl;
 		heap->siftUp(ultimoNodo);
-		//cout << "elsig" << __LINE__ << endl;
 	}
 }
 
@@ -399,27 +410,17 @@ void HeapModificable::siftDown(Nodo* p)
 
 void HeapModificable::siftUp(Nodo* p)
 {
-	//cout << "siftup" << __LINE__ << endl;
 	if ((*p).padre == NULL){
-		//cout << "siftup" << __LINE__ << endl;
 		tope = p;
 	}
 	else{
-		//cout << "siftup" << __LINE__ << endl;
 		Nodo* swap = p;
-		//cout << "siftup" << __LINE__ << endl;
 		if(p->elemento < (p->padre)->elemento){
-			//cout << "siftup" << __LINE__ << endl;
 		    swap = p->padre;
 	    }
-	    //cout << "siftup" << __LINE__ << endl;
 	    bool juab = p != swap;
-	    //cout << juab << endl;
-	    //cout << "siftup" << __LINE__ << endl;
     	if(p != swap){
-    		//cout << "siftup" << __LINE__ << endl;
 	    	intercambio(swap, p);
-	    	//cout << "siftup" << __LINE__ << endl;
 		    siftUp(p);
 	    }
 	}
