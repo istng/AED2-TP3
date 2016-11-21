@@ -147,13 +147,50 @@ void agregar_como_siguiente()
 
 }
 
-int main() {
-	RUN_TEST(es_vacia);
-	RUN_TEST(encolar);
-	RUN_TEST(eliminar_siguiente);
-	RUN_TEST(siguiente);
-	RUN_TEST(agregar_como_siguiente);
+void desencolar()
+{
+	HeapModificable::JugadorHeap j0 = HeapModificable::JugadorHeap(3, 0);
+	HeapModificable::JugadorHeap j1 = HeapModificable::JugadorHeap(2, 1);
+	HeapModificable::JugadorHeap j2 = HeapModificable::JugadorHeap(0, 2);
+	
+	HeapModificable h;
+	h.encolar(j0);
+	h.encolar(j1);
+	h.encolar(j2);
 
+	HeapModificable l;
+	l.encolar(j0);
+	l.encolar(j2);
+	l.encolar(j1);
+
+	HeapModificable g;
+	g.encolar(j1);
+	g.encolar(j0);
+	g.encolar(j2);
+
+	HeapModificable m;
+	m.encolar(j1);
+	m.encolar(j2);
+	m.encolar(j0);
+
+	HeapModificable k;
+	k.encolar(j2);
+	k.encolar(j0);
+	k.encolar(j1);
+
+	HeapModificable n;
+	n.encolar(j2);
+	n.encolar(j1);
+	n.encolar(j0);
+}
+
+int main() {
+	//RUN_TEST(es_vacia);
+	//RUN_TEST(encolar);
+	//RUN_TEST(eliminar_siguiente);
+	//RUN_TEST(siguiente);
+	//RUN_TEST(agregar_como_siguiente);
+	RUN_TEST(desencolar);
 	return 0;
 
 }

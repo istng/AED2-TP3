@@ -121,90 +121,91 @@ HeapModificable::HeapModificable() : tope(NULL) {}
 
 HeapModificable::Iterador HeapModificable::encolar(const JugadorHeap& a)
 {
-	cout << "enc" << __LINE__ << endl;
+	//cout << "enc" << __LINE__ << endl;
     Nodo* siguienteIt;
-    cout << "enc" << __LINE__ << endl;
+    //cout << "enc" << __LINE__ << endl;
 	if(tope == NULL){
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		tope = new Nodo(a, 0, 0, NULL, NULL, NULL);
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		siguienteIt = tope;
 	}
 	else {
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		Nodo* ftrPadre = futuroPadre();
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		if(ftrPadre->hijoIzq == NULL){
-			cout << "enc" << __LINE__ << endl;
+			//cout << "enc" << __LINE__ << endl;
 			ftrPadre->hijoIzq = new Nodo(a, 0, 0, NULL, NULL, ftrPadre);
-			cout << "enc" << __LINE__ << endl;
+			//cout << "enc" << __LINE__ << endl;
 			ftrPadre = ftrPadre->hijoIzq;
 		}
 		else {
-			cout << "enc" << __LINE__ << endl;
+			//cout << "enc" << __LINE__ << endl;
 			ftrPadre->hijoDer = new Nodo(a, 0, 0, NULL, NULL, ftrPadre);
-			cout << "enc" << __LINE__ << endl;
+			//cout << "enc" << __LINE__ << endl;
 			ftrPadre = ftrPadre->hijoDer;
 		}
 		corregirProfundidad(ftrPadre->padre);
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		siftUp(ftrPadre);
-		cout << "enc" << __LINE__ << endl;
+		//cout << "enc" << __LINE__ << endl;
 		siguienteIt = ftrPadre;
 	}
-	cout << "enc" << __LINE__ << endl;
+	//cout << "enc" << __LINE__ << endl;
 	return Iterador(this, siguienteIt);
 }
 
 // Otras operaciones
 void HeapModificable::desencolar()
 {
-	cout << endl << "desenc" << __LINE__ << endl;
+	cout << "YO SOY: " << tope->elemento.id << endl;
+	//cout << endl << "desenc" << __LINE__ << endl;
 	Nodo* destruir = tope;
-	cout << "desenc" << __LINE__ << endl;
+	//cout << "desenc" << __LINE__ << endl;
 	if ((*tope).hijoIzq == NULL && (*tope).hijoDer == NULL)
 	{
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		tope = NULL;
 	}
 	else
 	{
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		Nodo* ultNodo = ultimoNodo();
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		Nodo* padreUlt = (*ultNodo).padre;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		bool nullelme = padreUlt == tope;
-		cout << nullelme << endl;
+		//cout << nullelme << endl;
 		if ((*padreUlt).hijoDer == ultNodo)	(*padreUlt).hijoDer = NULL;
 		else (*padreUlt).hijoIzq = NULL;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 
 		corregirProfundidad(padreUlt);
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 
 		(*ultNodo).padre = NULL;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).hijoIzq = (*tope).hijoIzq;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).hijoDer = (*tope).hijoDer;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).ramaMasCorta = (*tope).ramaMasCorta;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 		(*ultNodo).ramaMasLarga = (*tope).ramaMasLarga;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 
 		tope = ultNodo;
-		cout << "desenc" << __LINE__ << endl;
+		//cout << "desenc" << __LINE__ << endl;
 
 		if ((*tope).hijoIzq != NULL || (*tope).hijoDer != NULL)
 		{
-			cout << "desenc" << __LINE__ << endl;
+			//cout << "desenc" << __LINE__ << endl;
 			siftDown(tope);
 		}
 	}
 
-	cout << "desenc" << __LINE__ << endl;
+	//cout << "desenc" << __LINE__ << endl;
 	delete destruir;
 }
 
