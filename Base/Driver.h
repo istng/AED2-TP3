@@ -42,7 +42,7 @@ class Driver {
 	void moverse(const Jugador & j, const Coordenada & c);
 
 	/* Devuelve todas las coordenadas que posee el mapa del Juego. */
-	Conj< Coordenada > mapa() const;
+	Conj<Coordenada> mapa() const;
 
 	/* Indica si hay un camino posible entre dos coordenadas 
 	*  Requiere que las coordenadas existan en el mapa */
@@ -122,7 +122,7 @@ class Driver {
 	 * funciones auxiliares que les hagan falta.							*
 	 ************************************************************************/  
 
-	Juego juego;
+	Juego * pJuego;
 
 
 	Mapa DameMapa(const Conj<Coordenada>& cs) const;

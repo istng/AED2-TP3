@@ -85,6 +85,7 @@ Juego::Juego(const Mapa& m) : _mapa(m),jugadoresNoExpulsados(),_jugadores(),_exp
 	pokemonsTotales =DiccString<infoPoke>();
 	cantidadPokeTotal = 0;
 }*/
+Juego::~Juego(){ }
 
 void Juego::agregarPokemon(const Pokemon& p, const Coordenada& c)
 {
