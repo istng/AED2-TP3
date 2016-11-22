@@ -1,8 +1,8 @@
 #include "Driver.h"
 
-// Instanciar un mapa y un this->juego->
+// Instanciar un mapa y un this->juego 
 
-Driver::Driver(const Conj< Coordenada > & cs) 
+Driver::Driver(const Conj< Coordenada > & cs)
 {
   Mapa m;
   Conj< Coordenada >::const_Iterador coords = cs.CrearIt();
@@ -12,70 +12,62 @@ Driver::Driver(const Conj< Coordenada > & cs)
   	coords.Avanzar();	
   }
 
-  //std::cout << "todo va bien" << std::endl;
-
-  this->juego = new Juego(m);
+  this->pJuego = new Juego(m);
 }
 
-Driver::~Driver()
-{
-  delete this->juego;
-}
+Driver::~Driver(){ }
 
 void Driver::agregarPokemon(const Pokemon & p, const Coordenada & c)
 {
-  this->juego->agregarPokemon(p,c);
+  this->pJuego->agregarPokemon(p,c);
 }
 
 
 Jugador Driver::agregarJugador(){
 
-	Jugador id = this->juego->agregarJugador();
+	Jugador id = this->pJuego->agregarJugador();
 	return id;
 }
 
 void Driver::conectarse(const Jugador & j, const Coordenada & c){
 
-	this->juego->conectarse(j,c);
+	this->pJuego->conectarse(j,c);
 }
 
 void Driver::desconectarse(const Jugador & j){
-	this->juego->desconectarse(j);
+	this->pJuego->desconectarse(j);
 }
 
 void Driver::moverse(const Jugador & j, const Coordenada & c){
-	this->juego->moverse(j,c);
+	this->pJuego->moverse(j,c);
 }
 
-Conj< Coordenada > Driver::mapa() const{
+Conj<Coordenada> Driver::mapa() const{
 
-	Conj< Coordenada > res;
-	Conj<Coordenada>::const_Iterador it = this->juego->mapa().coordenadas();
+	Conj<Coordenada> res;
+	Conj<Coordenada>::const_Iterador it = this->pJuego->mapa().coordenadas();
 	while (it.HaySiguiente())
 	{
-        const Coordenada c = it.Siguiente();
-       // res.Agregar(it.Siguiente());
-        it.Avanzar();
+		res.Agregar(it.Siguiente());
 	}
-     std::cout << "todo va bien con el mapa" << std::endl;
 
 	return res;
 }
 
 bool Driver::hayCamino(const Coordenada & c1, const Coordenada & c2) const{
 
-	return this->juego->mapa().hayCamino(c1,c2);
+	return this->pJuego->mapa().hayCamino(c1,c2);
 }
 
 bool Driver::posExistente(const Coordenada & c) const{
 
-	return this->juego->mapa().posExistente(c);
+	return this->pJuego->mapa().posExistente(c);
 }
 
 Conj< Jugador > Driver::jugadores() const{
 
 	Conj< Jugador > res;
-	Conj< Jugador >::const_Iterador it = this->juego->jugadores();
+	Conj< Jugador >::const_Iterador it = this->pJuego->jugadores();
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
@@ -86,21 +78,21 @@ Conj< Jugador > Driver::jugadores() const{
 }
 
 bool Driver::estaConectado(const Jugador & j) const{
-	return this->juego->estaConectado(j);
+	return this->pJuego->estaConectado(j);
 }
 
 
 Nat Driver::sanciones(const Jugador & j) const{
-	return this->juego->sanciones(j);
+	return this->pJuego->sanciones(j);
 }
 
 Coordenada Driver::posicion(const Jugador & j) const{
-	return this->juego->posicion(j);
+	return this->pJuego->posicion(j);
 }
 
 Dicc< Pokemon , Nat > Driver::pokemons(const Jugador & j) const{
 	Dicc <Pokemon , Nat > res;
-	Conj<Juego::pokes>::const_Iterador it = this->juego->pokemons(j);
+	Conj<Juego::pokes>::const_Iterador it = this->pJuego->pokemons(j);
 	while (it.HaySiguiente())
 	{
 		res.Definir(it.Siguiente().tipo,it.Siguiente().cant);
@@ -111,7 +103,7 @@ Dicc< Pokemon , Nat > Driver::pokemons(const Jugador & j) const{
 Conj< Jugador > Driver::expulsados() const{
 
 	Conj< Jugador > res;
-	Conj< Jugador >::const_Iterador it = this->juego->expulsados();
+	Conj< Jugador >::const_Iterador it = this->pJuego->expulsados();
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
@@ -123,7 +115,7 @@ Conj< Jugador > Driver::expulsados() const{
 Conj< Coordenada > Driver::posConPokemons() const{
 
 	Conj< Coordenada > res;
-	Conj<Coordenada>::const_Iterador it = this->juego->posConPokemons();
+	Conj<Coordenada>::const_Iterador it = this->pJuego->posConPokemons();
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
@@ -134,35 +126,35 @@ Conj< Coordenada > Driver::posConPokemons() const{
 }
 
 Pokemon Driver::pokemonEnPos(const Coordenada & c) const{
-	return this->juego->pokemonEnPos(c);
+	return this->pJuego->pokemonEnPos(c);
 }
 
 
 Nat Driver::cantMovimientosParaCaptura(const Coordenada & c) const{
-	return this->juego->cantMovimientosParaCapturar(c);
+	return this->pJuego->cantMovimientosParaCapturar(c);
 }
 
 
 bool Driver::puedoAgregarPokemon(const Coordenada & c) const{
-	return this->juego->pudoAgregarPokemon(c);
+	return this->pJuego->pudoAgregarPokemon(c);
 }
 
 
 bool Driver::hayPokemonCercano(const Coordenada & c) const{
-	return this->juego->hayPokemonCercano(c);
+	return this->pJuego->hayPokemonCercano(c);
 }
 
 Coordenada Driver::posPokemonCercano(const Coordenada & c) const{
-	return this->juego->posPokemonCercano(c);
+	return this->pJuego->posPokemonCercano(c);
 }
 
 
 Conj<Jugador> Driver::entrenadoresPosibles(const Coordenada & c) const{
-	return this->juego->entrenadoresPosibles(c);
+	return this->pJuego->entrenadoresPosibles(c);
 }
 
 Nat Driver::indiceRareza(const Pokemon & p) const{
-	return this->juego->indiceDeRareza(p);
+	return this->pJuego->indiceDeRareza(p);
 }
 
 

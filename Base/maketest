@@ -1,0 +1,1 @@
+rm -f tests && g++ -o tests tests.cpp Driver.cpp Juego.cpp DiccString.h HeapModificable.cpp Mapa.cpp
