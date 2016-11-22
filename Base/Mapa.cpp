@@ -1,67 +1,9 @@
-#ifndef MAPA_H_
-#define MAPA_H_
-
-#include "TiposJuego.h"
-#include "aed2/TiposBasicos.h"
-#include "aed2/Vector.h"
-#include "aed2/Conj.h"
-
-using namespace aed2;
-
-class Mapa
-{
-	public:
-		//Generadores
-	    Mapa();
-		void agregarCoor(const Coordenada& c);
-		//Destructor
-		//void ~Mapa();
-
-		//Observadores
-
-		Conj<Coordenada>::const_Iterador coordenadas() const ;
-		bool posExistente (const Coordenada& c) const ;
-		bool hayCamino (const Coordenada& c , const Coordenada& cprima)const;
-		bool hayCamino2 (const Coordenada& c , const Coordenada& cprima)const;
-		bool ExisteCamino(const Coordenada& c, const Coordenada& cprima, Conj<Coordenada>& cs ) const;
-		bool ExisteCaminoPorArriba(const Coordenada& c, const Coordenada& cprima, Conj<Coordenada>& cs ) const ;
-		bool ExisteCaminoPorAbajo(const Coordenada& c, const Coordenada& cprima, Conj<Coordenada>& cs ) const;
-		bool ExisteCaminoPorIzquierda(const Coordenada& c, const Coordenada& cprima, Conj<Coordenada>& cs ) const;
-		bool ExisteCaminoPorDerecha(const Coordenada& c, const Coordenada& cprima, Conj<Coordenada>& cs )const ;
-
-
-
-
-	private:
-
-		//Vector<Vector<Info>> columnas;
-		//Conj<Coordenada> coords;
-
-		/*struct Fila
-		{
-			vector<Info> fila;	
-		};*/
-
-		struct Info
-		{
-			bool _esta;
-			Conj<Coordenada> _adyacentes;
-			Info(): _esta(false), _adyacentes(){}				
-			
-
-		};
-
-
-
-		Vector<Vector<Info> > columnas;
-		Conj<Coordenada> coords;
-
-	
-};
-
+#include "Mapa.h"
 
 Mapa::Mapa(): columnas(),coords(){
 }
+
+Mapa::~Mapa(){ }
 
 Conj<Coordenada>::const_Iterador Mapa::coordenadas() const{
 
@@ -93,7 +35,7 @@ void Mapa::agregarCoor(const Coordenada& c){
 
 	if (this->columnas.Longitud() < longitud(c) + 1) 
 	{
-		int i = this->columnas.Longitud();
+		Nat i = this->columnas.Longitud();
 		while (i <= longitud(c) + 1)
 		{
 			Vector<Info> v;
@@ -105,7 +47,7 @@ void Mapa::agregarCoor(const Coordenada& c){
 	Vector<Info>* fila = &(this->columnas[longitud(c)]);
 	if (fila->Longitud() < latitud(c) + 1)
 	{
-		int j = fila->Longitud();
+		Nat j = fila->Longitud();
 		while(j <= latitud(c) + 1)
 		{
 			fila->AgregarAtras(Info());
@@ -133,7 +75,7 @@ void Mapa::agregarCoor(const Coordenada& c){
 		it.Avanzar();
 	}
 
-	std::cout << std::endl << this->coords << std:: endl;
+	//std::cout << std::endl << this->coords << std:: endl;
 
 }
 
@@ -288,12 +230,7 @@ std::ostream& operator<<(std::ostream& os, const Mapa& m){
 		it.Avanzar();
 	}
 
-
+    return os;
 
 
 }
-
-
-#endif
-
-

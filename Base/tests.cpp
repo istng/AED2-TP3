@@ -8,34 +8,37 @@
 using namespace aed2;
 
 void test_constructor_con_mapa() {
-  /*Conj<Coordenada> cc;
+  Conj<Coordenada> cc;
   cc.Agregar(Coordenada(0,0));
   cc.Agregar(Coordenada(0,1));
   cc.Agregar(Coordenada(0,2));
   cc.Agregar(Coordenada(1,2));
   cc.Agregar(Coordenada(10,0));
   cc.Agregar(Coordenada(1,4));
+
+
   Driver d(cc);
-  ASSERT( d.mapa() == cc );*/
-  ASSERT( true );
+ // std::cout << "todo va bienaa" << std::endl;
+  ASSERT( d.mapa() == cc );
+  //ASSERT( true );
 }
 
-void test_agregar_jugadores(){
+/*void test_agregar_jugadores(){
 	ASSERT( false );
 }
 
 void test_agregar_pokemones(){
 	ASSERT( false );
-}
+}*/
 
 // TODO: Agregar más tests
 
 
 int main(int argc, char **argv)
 {
-  RUN_TEST(test_constructor_con_mapa);
-  RUN_TEST(test_agregar_jugadores);
-  RUN_TEST(test_agregar_pokemones);
+ RUN_TEST(test_constructor_con_mapa);
+ // RUN_TEST(test_agregar_jugadores);
+  //RUN_TEST(test_agregar_pokemones);
   
   return 0;
 }
