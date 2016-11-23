@@ -44,12 +44,14 @@ class Juego
 		void moverse(Jugador e,const Coordenada& c);
 		
 	// Otras operaciones
-        const Conj<Coordenada> coordARadio(const Coordenada &c, Nat r) const;
+        
 		bool pudoAgregarPokemon(const Coordenada &c) const;
 		bool hayPokemonCercano(const Coordenada &c) const;
-		const Coordenada& posPokemonCercano(const Coordenada &c) const;
+		const Coordenada posPokemonCercano(const Coordenada &c) const;
 		const Conj<Jugador>& entrenadoresPosibles(const Coordenada& c) const;
 		Nat indiceDeRareza(const Pokemon &p) const;
+		Nat cantMismaEspecie(const Pokemon& p) const;
+		Nat cantPokemonsTotales() const;
 		
 	// pokes es necesario que sea publico porqur pokemons devuelve un Conj de pokes
 		struct pokes{
@@ -106,6 +108,7 @@ class Juego
             Conj< Dicc<Coordenada, infoCoord>::Iterador > pos;
 		};
 		
+		const Conj<Coordenada> coordARadio(const Coordenada &c, Nat r) const;
 		Vector<Vector<Conj<Jugador> > > crearMatrizJug(const Mapa& m) const;
 		Vector< Vector<infoMatrizPoke> > crearMatrizPokes(const Mapa& m) const;
 		HeapModificable& crearHeapPokemon(const Coordenada& c);
@@ -117,8 +120,7 @@ class Juego
 		void expulsarJugador(Jugador e);
 		Nat cantidadPokemons(Jugador e) const;
 		void eliminarPokemons(Jugador e);
-		Nat cantMismaEspecie(const Pokemon& p) const;
-		Nat cantPokemonsTotales() const;
+		
 };
 
 #endif
