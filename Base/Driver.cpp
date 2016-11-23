@@ -4,18 +4,21 @@
 
 Driver::Driver(const Conj< Coordenada > & cs)
 {
-  Mapa m;
+  this->pMapa =  new Mapa;
   Conj< Coordenada >::const_Iterador coords = cs.CrearIt();
   while (coords.HaySiguiente())
   {
-  	m.agregarCoor(coords.Siguiente());
+    pMapa->agregarCoor(coords.Siguiente());
   	coords.Avanzar();	
   }
 
-  this->pJuego = new Juego(m);
+  this->pJuego = new Juego(*pMapa);
 }
 
-Driver::~Driver(){ }
+Driver::~Driver(){
+    delete this->pJuego;
+    delete this->pMapa;
+}
 
 void Driver::agregarPokemon(const Pokemon & p, const Coordenada & c)
 {
@@ -46,12 +49,14 @@ Conj<Coordenada> Driver::mapa() const{
 
 	Conj<Coordenada> res;
 	Conj<Coordenada>::const_Iterador it = this->pJuego->mapa().coordenadas();
-	while (it.HaySiguiente())
+    while (it.HaySiguiente())
 	{
+        std::cout << "coordenada:" << it.Siguiente() << std::endl;
 		res.Agregar(it.Siguiente());
+		it.Avanzar();
 	}
 
-	return res;
+    return res;
 }
 
 bool Driver::hayCamino(const Coordenada & c1, const Coordenada & c2) const{

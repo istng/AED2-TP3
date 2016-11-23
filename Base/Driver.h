@@ -122,7 +122,8 @@ class Driver {
 	 * funciones auxiliares que les hagan falta.							*
 	 ************************************************************************/  
 
-	Juego * pJuego;
+    Juego* pJuego;
+    Mapa* pMapa;
 
 
 	Mapa DameMapa(const Conj<Coordenada>& cs) const;
