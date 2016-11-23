@@ -76,6 +76,7 @@ Conj< Jugador > Driver::jugadores() const{
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
+		it.Avanzar();
 	}
 
 	return res;
@@ -173,8 +174,19 @@ Mapa Driver::DameMapa(const Conj<Coordenada>& cs) const {
   		coords.Avanzar();	
   	}
   	return m;
-} 
+}
 
+
+Nat Driver::cantPokemonsTotales() const
+{
+	return this->pJuego->cantPokemonsTotales();
+}
+
+
+Nat cantMismaEspecie(const Pokemon & p) const
+{
+	return this->pJuego->cantMismaEspecie(p);
+}
 
 
 // TODO: Completar con el resto de las implementaciones
