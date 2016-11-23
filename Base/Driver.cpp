@@ -51,7 +51,7 @@ Conj<Coordenada> Driver::mapa() const{
 	Conj<Coordenada>::const_Iterador it = this->pJuego->mapa().coordenadas();
     while (it.HaySiguiente())
 	{
-        std::cout << "coordenada:" << it.Siguiente() << std::endl;
+        //std::cout << "coordenada:" << it.Siguiente() << std::endl;
 		res.Agregar(it.Siguiente());
 		it.Avanzar();
 	}

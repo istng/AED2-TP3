@@ -13,10 +13,12 @@ Conj<Coordenada>::const_Iterador Mapa::coordenadas() const{
 
 bool Mapa::posExistente(const Coordenada& c) const{
 
-	if (c.longitud <= this->columnas.Longitud() + 1 )
+	if (c.longitud < this->columnas.Longitud() )
 	{
+		//std::cout << std::endl << c.longitud <<" " << this->columnas.Longitud() <<std::endl;
 		Vector<Info> fila = this->columnas[c.longitud];
 		if (c.latitud < fila.Longitud())
+
 		{
 			return fila[c.latitud]._esta;
 		}

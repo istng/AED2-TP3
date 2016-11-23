@@ -209,23 +209,38 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 
 const Conj<Coordenada> Juego::coordARadio(const Coordenada &c, Nat r) const{
     //no se si no la entiendo, pero para mi esto hace cualquier cosa
-    Conj<Coordenada> coords = Conj<Coordenada>();
-    Nat i,j = 0;
+    Conj<Coordenada> coords;
+    Nat i = 0;
+    Nat j = 0;
     if(r <= c.latitud){
          i = c.latitud - r; 
     }
     if(r <= c.longitud){
          j = c.longitud - r;
     }
-    while(i <= c.latitud + r){
-         while(j<=c.longitud + r){
-             if(_mapa->posExistente(Coordenada(i,j))){
+    while(i < c.latitud + r){
+    	if(r <= c.longitud){
+        	j = c.longitud - r;
+    	}
+    	else j = 0;
+         while(j < c.longitud + r){
+         	  //std::cout<< "j: " << j << "  i:" << i << std::endl;
+             if(_mapa->posExistente(Coordenada(i,j)) && (i*i + j*j <= r*r)){
+             	//std::cout<< "j: " << j << "  i:" << i <<  "   *****************"<< std::endl;
                  coords.AgregarRapido(Coordenada(i,j));
              }
              j++;
+
          }
+        // std::cout<< "i:" << i << std::endl;
          i++;
     }
+
+
+
+
+
+
     return coords;
 }
 
@@ -242,14 +257,16 @@ bool Juego::pudoAgregarPokemon(const Coordenada& c) const{
    // }
    // return false;
    if(_mapa->posExistente(c)){
-	   return !hayPokemonCercano(c);  
+   	 //std::cout<< "ssssssssssssssss"<< std::endl;
+   	   return !hayPokemonCercano(c);  
    }
    return false;
 }
 
 bool Juego::hayPokemonCercano(const Coordenada& c) const{
     if(_mapa->posExistente(c)){
-        Conj<Coordenada> posibles = coordARadio(c,25);
+        Conj<Coordenada> posibles = coordARadio(c,5);
+        //std::cout << "existe :" << posibles.Pertenece(Coordenada(0,0)) << std::endl;
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
         while(it.HaySiguiente()){
             if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
@@ -263,7 +280,7 @@ bool Juego::hayPokemonCercano(const Coordenada& c) const{
 
 const Coordenada& Juego::posPokemonCercano(const Coordenada& c) const{
     if(_mapa->posExistente(c)){
-        Conj<Coordenada> posibles = coordARadio(c,25);
+        Conj<Coordenada> posibles = coordARadio(c,5);
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
         while(it.HaySiguiente()){
             if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
@@ -277,7 +294,7 @@ const Coordenada& Juego::posPokemonCercano(const Coordenada& c) const{
 
 const Conj<Jugador>& Juego::entrenadoresPosibles(const Coordenada& c) const{
     Conj<Jugador>* entrenadores = new Conj<Jugador>();
-    Conj<Coordenada> posibles = coordARadio(c,25);
+    Conj<Coordenada> posibles = coordARadio(c,4);
     Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
     while(it.HaySiguiente()){
         Conj<Jugador>::const_Iterador itJ = matrizJugadores[it.Siguiente().longitud][it.Siguiente().longitud].CrearIt();
@@ -296,41 +313,40 @@ Nat Juego::indiceDeRareza(const Pokemon& p) const{
 
 
 // privado
-Vector< Vector< Conj<Jugador> > >& Juego::crearMatrizJug(const Mapa& m) const
+Vector< Vector< Conj<Jugador> > > Juego::crearMatrizJug(const Mapa& m) const
 {
 
 
-	Vector< Vector< Conj<Jugador> > >* res = new Vector< Vector< Conj<Jugador> > >();
+	Nat longitudMax = 0;
+	Nat latitudMax = 0;
+
 	Conj<Coordenada>::const_Iterador it = m.coordenadas();
-	
+
+	// Buscamos la latidud maxima y la longitud maxima
+
 	while(it.HaySiguiente()){
-		Coordenada c = it.Siguiente();
-		if(res->Longitud() < c.longitud + 1 ){
-			Nat i = res->Longitud();
-			while(i <= c.longitud){
-				res->AgregarAtras(Vector< Conj<Jugador> >());
-				++i;
-			}
-		}
-		// Acá cambio bastante!!!
-		for(Nat i = 0; i < res->Longitud(); ++i){
-			if((*res)[i].Longitud() < c.latitud + 1 ){
-				for(Nat j = (*res)[i].Longitud(); j < c.latitud + 1; ++j){
-					(*res)[i].AgregarAtras(Conj<Jugador>());
-				}
-			}
-		}
+		if(it.Siguiente().longitud > longitudMax) longitudMax = it.Siguiente().longitud;
+		if(it.Siguiente().latitud > latitudMax) latitudMax = it.Siguiente().latitud;
 		it.Avanzar();
 	}
 
+	// Creamos la matriz
 
+	Vector< Vector<Conj<Jugador > > > res = Vector< Vector<Conj<Jugador> > >();
 
-	return *res;
+	for(Nat i = 0; i <= longitudMax; ++i){
+		res.AgregarAtras(Vector<Conj<Jugador > >());
+		for(Nat j = 0; j <= latitudMax; ++j){
+			res[i].AgregarAtras(Conj<Jugador>());
+		}
+	}
+
+	return res;
 
 	
 }
 
-Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m) const
+Vector< Vector<Juego::infoMatrizPoke> > Juego::crearMatrizPokes(const Mapa& m) const
 {
 	// La idea es crear una matriz rectangular que contenga todas las coordenadas de mapa
 	// y cada celda de la matriz contiene un infoMatrizPoke sin informacion
@@ -350,16 +366,16 @@ Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m) 
 
 	// Creamos la matriz
 
-	Vector< Vector<infoMatrizPoke> >* res = new Vector< Vector<infoMatrizPoke> >();
+	Vector< Vector<infoMatrizPoke> > res = Vector< Vector<infoMatrizPoke> >();
 
 	for(Nat i = 0; i <= longitudMax; ++i){
-		res->AgregarAtras(Vector<infoMatrizPoke>());
+		res.AgregarAtras(Vector<infoMatrizPoke>());
 		for(Nat j = 0; j <= latitudMax; ++j){
-			(*res)[i].AgregarAtras(infoMatrizPoke());
+			res[i].AgregarAtras(infoMatrizPoke());
 		}
 	}
 
-	return *res;
+	return res;
 
 	/*
 	Vector< Vector<infoMatrizPoke> >* res = new Vector< Vector<infoMatrizPoke> >();

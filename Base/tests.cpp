@@ -17,17 +17,20 @@ void test_constructor_con_mapa() {
   cc.Agregar(Coordenada(10,0));
   cc.Agregar(Coordenada(1,4));
 
+ 
+
 
   Driver d(cc);
  // std::cout << "todo va bienaa" << std::endl;
   ASSERT( d.mapa() == cc );
+
  // ASSERT( true );
 }
 
-/*void test_agregar_jugadores(){
+void test_agregar_jugadores(){
 	ASSERT( false );
 }
-*/
+
 void test_agregar_pokemones(){
   Conj<Coordenada> cc;
 
@@ -78,7 +81,7 @@ void test_puedo_agregar_pokemones(){
 int main(int argc, char **argv)
 {
  RUN_TEST(test_constructor_con_mapa);
- // RUN_TEST(test_agregar_jugadores);
+ RUN_TEST(test_agregar_jugadores);
  RUN_TEST(test_agregar_pokemones);
  RUN_TEST(test_puedo_agregar_pokemones);
   
