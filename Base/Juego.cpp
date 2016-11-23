@@ -409,24 +409,22 @@ Vector< Vector<Juego::infoMatrizPoke> > Juego::crearMatrizPokes(const Mapa& m) c
 HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
 {
 	HeapModificable* pokeHeap = new HeapModificable();
-	Nat i = -2;
-	while(i <= 2){
-		Nat j = -2;
-		while(j <= 2){
-			Coordenada coorJug = Coordenada(c.longitud + i, c.latitud + j);
-			if(_mapa->posExistente(coorJug) && DistEuclidea(c, coorJug) <= 2){
-				Conj<Jugador>::Iterador itJugHeap = matrizJugadores[i][j].CrearIt();
-				while(itJugHeap.HaySiguiente()){
-					Nat id = itJugHeap.Siguiente();
-					HeapModificable::Iterador itPokeHeap = pokeHeap->encolar(HeapModificable::JugadorHeap(cantidadPokemons(id), id));
-					_jugadores[id].prioridad = itPokeHeap;
-					itJugHeap.Avanzar();
-				}
+		Conj<Coordenada> coords = coordARadio(c,2);
+		Conj<Coordenada>::const_Iterador it = coords.CrearIt();
+		while(it.HaySiguiente())
+		{
+			Nat i = it.Siguiente().longitud;
+			Nat j = it.Siguiente().latitud;
+			Conj<Jugador>::Iterador itJugHeap = matrizJugadores[i][j].CrearIt();
+			while(itJugHeap.HaySiguiente()){
+				Nat id = itJugHeap.Siguiente();
+				HeapModificable::Iterador itPokeHeap = pokeHeap->encolar(HeapModificable::JugadorHeap(cantidadPokemons(id), id));
+				_jugadores[id].prioridad = itPokeHeap;
+				itJugHeap.Avanzar();
 			}
-			++j;
+			it.Avanzar();
+		
 		}
-		++i;
-	}
 	
 	return *pokeHeap;
 }
