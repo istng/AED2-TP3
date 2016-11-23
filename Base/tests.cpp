@@ -9,6 +9,7 @@ using namespace aed2;
 
 void test_constructor_con_mapa() {
   Conj<Coordenada> cc;
+
   cc.Agregar(Coordenada(0,0));
   cc.Agregar(Coordenada(0,1));
   cc.Agregar(Coordenada(0,2));
@@ -20,16 +21,35 @@ void test_constructor_con_mapa() {
   Driver d(cc);
  // std::cout << "todo va bienaa" << std::endl;
   ASSERT( d.mapa() == cc );
-  //ASSERT( true );
+ // ASSERT( true );
 }
 
 /*void test_agregar_jugadores(){
 	ASSERT( false );
 }
-
+*/
 void test_agregar_pokemones(){
-	ASSERT( false );
-}*/
+  Conj<Coordenada> cc;
+
+  cc.Agregar(Coordenada(0,0));
+  cc.Agregar(Coordenada(0,1));
+  cc.Agregar(Coordenada(0,2));
+  cc.Agregar(Coordenada(1,2));
+  cc.Agregar(Coordenada(10,0));
+  cc.Agregar(Coordenada(1,4));
+
+  Driver d(cc);
+
+  d.agregarPokemon("poke1", Coordenada(10,4));
+  d.agregarPokemon("poke2", Coordenada(0,0));
+  d.agregarPokemon("poke3", Coordenada(6,3));
+  d.agregarPokemon("poke4", Coordenada(0,4));
+
+  ASSERT(d.pokemonEnPos(Coordenada(10,4)) == "poke1");
+  ASSERT(d.pokemonEnPos(Coordenada(0,0)) == "poke2");
+  ASSERT(d.pokemonEnPos(Coordenada(6,3)) == "poke3");
+  ASSERT(d.pokemonEnPos(Coordenada(0,4)) == "poke4");
+}
 
 // TODO: Agregar más tests
 
@@ -38,7 +58,7 @@ int main(int argc, char **argv)
 {
  RUN_TEST(test_constructor_con_mapa);
  // RUN_TEST(test_agregar_jugadores);
-  //RUN_TEST(test_agregar_pokemones);
+ RUN_TEST(test_agregar_pokemones);
   
   return 0;
 }

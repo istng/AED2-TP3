@@ -329,6 +329,36 @@ Vector< Vector< Conj<Jugador> > >& Juego::crearMatrizJug(const Mapa& m) const
 
 Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m) const
 {
+	// La idea es crear una matriz rectangular que contenga todas las coordenadas de mapa
+	// y cada celda de la matriz contiene un infoMatrizPoke sin informacion
+
+	Nat longitudMax = 0;
+	Nat latitudMax = 0;
+
+	Conj<Coordenada>::const_Iterador it = m.coordenadas();
+
+	// Buscamos la latidud maxima y la longitud maxima
+
+	while(it.HaySiguiente()){
+		if(it.Siguiente().longitud > longitudMax) longitudMax = it.Siguiente().longitud;
+		if(it.Siguiente().latitud > latitudMax) latitudMax = it.Siguiente().latitud;
+		it.Avanzar();
+	}
+
+	// Creamos la matriz
+
+	Vector< Vector<infoMatrizPoke> >* res = new Vector< Vector<infoMatrizPoke> >();
+
+	for(Nat i = 0; i <= longitudMax; ++i){
+		res->AgregarAtras(Vector<infoMatrizPoke>());
+		for(Nat j = 0; j <= latitudMax; ++j){
+			(*res)[i].AgregarAtras(infoMatrizPoke());
+		}
+	}
+
+	return *res;
+
+	/*
 	Vector< Vector<infoMatrizPoke> >* res = new Vector< Vector<infoMatrizPoke> >();
 	Conj<Coordenada>::const_Iterador it = m.coordenadas();
 	
@@ -354,7 +384,7 @@ Vector< Vector<Juego::infoMatrizPoke> >& Juego::crearMatrizPokes(const Mapa& m) 
 
     
 	return *res;
-
+*/
 }
 
 HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
