@@ -241,7 +241,10 @@ bool Juego::pudoAgregarPokemon(const Coordenada& c) const{
    //     return true;
    // }
    // return false;
-   return !hayPokemonCercano(c);    
+   if(_mapa->posExistente(c)){
+	   return !hayPokemonCercano(c);  
+   }
+   return false;
 }
 
 bool Juego::hayPokemonCercano(const Coordenada& c) const{
