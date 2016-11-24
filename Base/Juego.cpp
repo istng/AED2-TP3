@@ -140,7 +140,7 @@ void Juego::conectarse(Jugador j, const Coordenada& c){
     if(hayPokemonCercano(c)){
         Coordenada pokePosi = posPokemonCercano(c);
         HeapModificable::JugadorHeap nueva = HeapModificable::JugadorHeap(cantidadPokemons(j), j);
-            std::cout << std::endl << "todo tranqui" << std::endl;
+
 
         HeapModificable::Iterador itHeap = matrizPokemons[pokePosi.longitud][pokePosi.latitud].iterador.SiguienteSignificado().colaPrioridad->encolar(nueva);
         _jugadores[j].prioridad = itHeap;
@@ -170,16 +170,21 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 	{
 		Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke = pokemonsTotales->Obtener(poke.Siguiente()).pos.CrearIt();
 		while(posPoke.HaySiguiente())
-		{
-			if (DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) =< 4  )
+        {
+            bool seMovioDesde = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) <= 4;
+            bool seMovioHacia = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) > 4;
+
+            // Para el caso 1 no entra pasa todas las guardas deveria evaluar a false pues seMovioDesde y SeMovioHacia son true.
+
+            if (seMovioDesde && !seMovioHacia)  //Caso 2
 			{
-				laCoordenadaEsInicio(posPoke,I,F,e);
+                laCoordenadaEsInicio(posPoke,I,F,e);
 			}
-			else if (DistEuclidea(posPoke.Siguiente().SiguienteClave(),F) =< 4)
+            else if (!seMovioDesde && seMovioHacia )  //Caso 3
 			{
 				laCoordenadaEsFinal(posPoke,I,F,e);
 			}
-			else  
+            else if( !seMovioDesde && !seMovioHacia)  //Caso 4
 			{
 				laCoordenadaEsOtra(posPoke,I,F);
 			}
@@ -431,48 +436,86 @@ HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
 	return *pokeHeap;
 }
 
+
+/*
+ * I <-- coordenada de inicio.
+ * F <-- coordenada destino (final).
+ *
+ *
+ *   Para el generador mover existen los siguientes casos:
+ *
+ *   1) El jugador se mueve dentro del rango en el que estaba.    <=>     I y F estan tienen el mismo poke cercano.
+ *   2) El jugador se mueve desde fuera de un rango hacia uno.    <=>     I no tiene poke cercano y F si.
+ *   3) El jugador se mueve desde dentro de un rango hacia fuera. <=>     I tiene poke cerano y F no.
+ *   4) El jugador se mueve desde un rango hacia otro.            <=>     I y F tienen poke cercano pero no es el mismo.
+ *   5) El jugador no se mueve ni desde ni hacia un rango.        <=>     I y F no tienen poke cercano.
+ *
+ *
+ *   //// Esto tendria que ser lo mismo que:
+ *
+ *  Para cada coordenada que contenga un pokemon.
+ *
+ *  1) El jugador se mueve dentro de su rango.         <=> la coordenada esta en rango de I y F.
+ *  2) El jugador se mueve desde su rango a fuera.     <=> la coordenada esta en rango de I y no de F.
+ *  3) El jugador se mueve hacia su rango desde fuera. <=> la coordenada esta en rango F y no de I.
+ *  4) El jugador se mueve desde su rango hacia.       <=> la coordeanad no esa en rango de F ni de I.
+ *
+ *  Notar que cubrimos todos los casos de I y F para una coordenda.Ahora dada una coordenada, lo que hariamos para cada uno de estos seria lo siguiente:
+ *
+ *  1) No hacemos nada.
+ *
+ *  2) *) lo sacamos del heap.
+ *     *) reiniciamos el contador.
+ *
+ *  3) *)lo encolamos al heap.
+ *     *) reiniciamos el contador.
+ *
+ *  4) si el cantMovCapt tiene 9:
+ *       *) se captura el pokemon.
+ *     si no:
+ *       *) se aumenta en 1 el contador.
+ *
+ *
+ *
+ *
+*/
+
+
+// Caso 2 ::::: la coord es la inicial y no es la final.
+
 void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
-	if (hayPokemonCercano(k) && hayPokemonCercano(I))
-	{
-		if (posPokemonCercano(k) ==  posPokemonCercano(I) && DistEuclidea(k,I) > 4) // la coord es la inicial y no la final
-		{
-			Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente(); 
-			it.SiguienteSignificado().cantMovCapt = 0; // Reiniciamos en contador cantMovCapt del pokemon de la coordenada de inicio
-			_jugadores[e].prioridad.eliminarSiguiente(); // Sacamos al jugador de la cola de prioridad del pokemon , se invalida el it
-		}
-	}
+
+    Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente();
+    it.SiguienteSignificado().cantMovCapt = 0; // Reiniciamos en contador cantMovCapt del pokemon de la coordenada de inicio
+    _jugadores[e].prioridad.eliminarSiguiente(); // Sacamos al jugador de la cola de prioridad del pokemon , se invalida el it
+
+
 	//Aca avanzamos posPoke 
 	posPoke.Avanzar();
 	
 }
 
+
+// Caso 3 ::::: la coord es la final y no es la inicial.
+
 void Juego::laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
-	if (hayPokemonCercano(k) && hayPokemonCercano(F))
-	{
-		if (posPokemonCercano(k) == posPokemonCercano(F) && DistEuclidea(k,I) > 4 ) // la coord es la final y no es la inicial 
-		{
-			Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente(); 
-			it.SiguienteSignificado().cantMovCapt = 0; // el jugador se metio , reiniciamos el contador
-			HeapModificable::JugadorHeap jug = HeapModificable::JugadorHeap(cantidadPokemons(e),e); 
-			HeapModificable* heap =  (it.SiguienteSignificado().colaPrioridad); 
-			_jugadores[e].prioridad = heap->encolar(jug); // lo metemos en el heap de pokemon cuya pos esta en rango del Jug
-		}/*
-		if (!hayPokemonCercano(F) )
-		{
-			Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente();
-			it.SiguienteSignificado().cantMovCapt = 0;
-			HeapModificable::JugadorHeap jug = HeapModificable::JugadorHeap(cantidadPokemons(e),e);
-			HeapModificable* heap =  it.SiguienteSignificado().colaPrioridad;
-			_jugadores[e].prioridad = heap->encolar(jug);
-		}*/
-	}
+
+    Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente();
+    it.SiguienteSignificado().cantMovCapt = 0; // el jugador se metio , reiniciamos el contador
+    HeapModificable::JugadorHeap jug = HeapModificable::JugadorHeap(cantidadPokemons(e),e);
+    HeapModificable* heap =  (it.SiguienteSignificado().colaPrioridad);
+    _jugadores[e].prioridad = heap->encolar(jug); // lo metemos en el heap de pokemon cuya pos esta en rango del Jug
+
 	posPoke.Avanzar();
 	
 }
+
+// Caso 4 ::::: la coord no es inicial ni final.
+
 
 void Juego::laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F)
 {

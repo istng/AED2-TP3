@@ -183,9 +183,9 @@ Nat Driver::cantPokemonsTotales() const
 }
 
 
-Nat cantMismaEspecie(const Pokemon & p) const
+Nat Driver::cantMismaEspecie(const Pokemon & p) const
 {
-	return this->pJuego->cantMismaEspecie(p);
+    return pJuego->cantMismaEspecie(p);
 }
 
 
