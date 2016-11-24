@@ -48,7 +48,7 @@ class Juego
 		bool pudoAgregarPokemon(const Coordenada &c) const;
 		bool hayPokemonCercano(const Coordenada &c) const;
 		const Coordenada posPokemonCercano(const Coordenada &c) const;
-		const Conj<Jugador>& entrenadoresPosibles(const Coordenada& c) const;
+		const Conj<Jugador> entrenadoresPosibles(const Coordenada& c) const;
 		Nat indiceDeRareza(const Pokemon &p) const;
 		Nat cantMismaEspecie(const Pokemon& p) const;
 		Nat cantPokemonsTotales() const;

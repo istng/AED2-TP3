@@ -38,9 +38,8 @@ const Conj<Jugador>::const_Iterador Juego::expulsados() const
 	return _expulsados.CrearIt();
 }
 
-const Conj<Coordenada>::const_Iterador Juego::posConPokemons() const
+const Conj<Coordenada>& Juego::posConPokemons() const
 {
-    // DICC NO TIENE NINGUNA FUNCION QUE TE DE LAS CLAVES!!!!
 	return Conj<Coordenada>::const_Iterador();
 }
 
@@ -186,7 +185,10 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 			}
             else if( !seMovioDesde && !seMovioHacia)  //Caso 4
 			{
+				Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador it2 = posPoke;
+				it2.Avanzar();
 				laCoordenadaEsOtra(posPoke,I,F);
+				posPoke = it2;
 			}
 
 			// fijarse donde se avanza posPoke!
@@ -225,14 +227,24 @@ const Conj<Coordenada> Juego::coordARadio(const Coordenada &c, Nat r) const{
     if(r <= c.longitud){
          j = c.longitud - r;
     }
-    while(i < c.latitud + r){
+    while(i <= c.latitud + r){
     	if(r <= c.longitud){
         	j = c.longitud - r;
     	}
     	else j = 0;
-         while(j < c.longitud + r){
-         	  //std::cout<< "j: " << j << "  i:" << i << std::endl;
-             if(_mapa->posExistente(Coordenada(i,j)) && (i*i + j*j <= r*r)){
+         while(j <= c.longitud + r){
+         	 
+         	 Nat i1 = c.latitud - i;
+         	 Nat j1 = c.longitud - j;
+
+         	 if (i1< 0){
+         	 	i1 = r - c.latitud;
+         	 }
+         	 if (j1 < 0){
+         	 	j1 = r - c.longitud;
+         	 }
+
+             if(_mapa->posExistente(Coordenada(i,j)) && ( i1 * i1 + j1 * j1 <= r * r )){
              	//std::cout<< "j: " << j << "  i:" << i <<  "   *****************"<< std::endl;
                  coords.AgregarRapido(Coordenada(i,j));
              }
@@ -273,10 +285,9 @@ bool Juego::pudoAgregarPokemon(const Coordenada& c) const{
 bool Juego::hayPokemonCercano(const Coordenada& c) const{
     if(_mapa->posExistente(c)){
         Conj<Coordenada> posibles = coordARadio(c,5);
-        //std::cout << "existe :" << posibles.Pertenece(Coordenada(0,0)) << std::endl;
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
         while(it.HaySiguiente()){
-            if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().longitud].hayPoke){
+            if(matrizPokemons[it.Siguiente().longitud][it.Siguiente().latitud].hayPoke){
                 return true;
             }
             it.Avanzar();
@@ -299,19 +310,19 @@ const Coordenada Juego::posPokemonCercano(const Coordenada& c) const{
     }
 }
 
-const Conj<Jugador>& Juego::entrenadoresPosibles(const Coordenada& c) const{
-    Conj<Jugador>* entrenadores = new Conj<Jugador>();
-    Conj<Coordenada> posibles = coordARadio(c,4);
+const Conj<Jugador> Juego::entrenadoresPosibles(const Coordenada& c) const{
+    Conj<Jugador> entrenadores = Conj<Jugador>();
+    Conj<Coordenada> posibles = coordARadio(c,2);
     Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
     while(it.HaySiguiente()){
-        Conj<Jugador>::const_Iterador itJ = matrizJugadores[it.Siguiente().longitud][it.Siguiente().longitud].CrearIt();
+        Conj<Jugador>::const_Iterador itJ = matrizJugadores[it.Siguiente().longitud][it.Siguiente().latitud].CrearIt();
         while(itJ.HaySiguiente()){
-            entrenadores->AgregarRapido(itJ.Siguiente());
+            entrenadores.AgregarRapido(itJ.Siguiente());
             itJ.Avanzar();
         }
         it.Avanzar();
     }
-	return *entrenadores;
+	return entrenadores;
 }
 
 Nat Juego::indiceDeRareza(const Pokemon& p) const{
@@ -522,11 +533,12 @@ void Juego::laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::It
 
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
 	Dicc<Coordenada, Juego::infoCoord>::Iterador it = posPoke.Siguiente();
-	if (hayPokemonCercano(k) && it.SiguienteSignificado().cantMovCapt == 9)		
+	HeapModificable* posibles = it.SiguienteSignificado().colaPrioridad;
+	if (it.SiguienteSignificado().cantMovCapt == 9 && !posibles->esVacia() )		
 	{
 		capturarPokemon(posPoke);
 	}
-	else if (hayPokemonCercano(k) && it.SiguienteSignificado().cantMovCapt < 9)
+	else if ( it.SiguienteSignificado().cantMovCapt < 9 )
 	{
 		it.SiguienteSignificado().cantMovCapt = it.SiguienteSignificado().cantMovCapt + 1;
 	}
@@ -541,16 +553,15 @@ void Juego::capturarPokemon(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Itera
 	Dicc<Coordenada, Juego::infoCoord>::Iterador it = Poke.Siguiente();
 	HeapModificable* posibles = it.SiguienteSignificado().colaPrioridad;
 	Pokemon tipo = it.SiguienteSignificado().tipo;
-	if (!posibles->esVacia())
-	{
-		Jugador jugGanador = posibles->proximo().id;
-		darlePokemon(jugGanador,tipo);
-		matrizPokemons[k.longitud][k.latitud].hayPoke = false;
-		//este iterador se invalida:
-		//matrizPokemons[k.longitud][k.latitud].iterador
-		it.EliminarSiguiente();
-		Poke.EliminarSiguiente(); 
-	}
+	
+	Jugador jugGanador = posibles->proximo().id;
+	darlePokemon(jugGanador,tipo);
+	matrizPokemons[k.longitud][k.latitud].hayPoke = false;
+	//este iterador se invalida:
+	//matrizPokemons[k.longitud][k.latitud].iterador
+	it.EliminarSiguiente();
+	Poke.EliminarSiguiente();
+	
 	
 }
 

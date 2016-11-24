@@ -102,6 +102,7 @@ Dicc< Pokemon , Nat > Driver::pokemons(const Jugador & j) const{
 	while (it.HaySiguiente())
 	{
 		res.Definir(it.Siguiente().tipo,it.Siguiente().cant);
+		it.Avanzar();
 	}
 	return res;
 }
@@ -113,6 +114,7 @@ Conj< Jugador > Driver::expulsados() const{
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
+		it.Avanzar();
 	}
 
 	return res;
@@ -125,6 +127,7 @@ Conj< Coordenada > Driver::posConPokemons() const{
 	while (it.HaySiguiente())
 	{
 		res.Agregar(it.Siguiente());
+		it.Avanzar();
 	}
 
 	return res;
