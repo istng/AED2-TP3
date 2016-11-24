@@ -483,7 +483,7 @@ HeapModificable& Juego::crearHeapPokemon(const Coordenada& c)
 
 // Caso 2 ::::: la coord es la inicial y no es la final.
 
-void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
+void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador& posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
 
@@ -500,7 +500,7 @@ void Juego::laCoordenadaEsInicio(Conj< Dicc<Coordenada, infoCoord>::Iterador >::
 
 // Caso 3 ::::: la coord es la final y no es la inicial.
 
-void Juego::laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F, Jugador e)
+void Juego::laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador& posPoke, Coordenada& I, Coordenada& F, Jugador e)
 {
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
 
@@ -517,7 +517,7 @@ void Juego::laCoordenadaEsFinal(Conj< Dicc<Coordenada, infoCoord>::Iterador >::I
 // Caso 4 ::::: la coord no es inicial ni final.
 
 
-void Juego::laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke, Coordenada& I, Coordenada& F)
+void Juego::laCoordenadaEsOtra(Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador& posPoke, Coordenada& I, Coordenada& F)
 {
 
 	Coordenada k = posPoke.Siguiente().SiguienteClave();
