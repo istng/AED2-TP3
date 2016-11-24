@@ -1,23 +1,18 @@
 #include "HeapModificable.h"
 
-
-
-
-
-
-
-HeapModificable::Iterador& HeapModificable::Iterador::operator = (const HeapModificable::Iterador& otra){
+HeapModificable::Iterador& HeapModificable::Iterador::operator = (const HeapModificable::Iterador& otra)
+{
 	heap = otra.heap;
 	siguiente = otra.siguiente;
 	return *this;
 }
 
-const HeapModificable::const_Iterador& HeapModificable::const_Iterador::operator = (const HeapModificable::const_Iterador& otra){
+const HeapModificable::const_Iterador& HeapModificable::const_Iterador::operator = (const HeapModificable::const_Iterador& otra)
+{
 	heap = otra.heap;
 	siguiente = otra.siguiente;
 	return *this;
 }
-
 
 
 // JugadorHeap
@@ -203,6 +198,8 @@ void HeapModificable::Iterador::eliminarSiguiente()
 		heap->siftDown(ultimoNodo);
 		heap->siftUp(ultimoNodo);
 	}
+	siguiente = NULL;	// se invalida el iterador
+	heap = NULL;
 }
 
 void HeapModificable::Iterador::agregarComoSiguiente(const JugadorHeap& a)
@@ -226,8 +223,8 @@ const HeapModificable::JugadorHeap& HeapModificable::const_Iterador::Siguiente()
 	return (*siguiente).elemento;
 }
 
-// private
 
+// private
 HeapModificable::Nodo* HeapModificable::ultimoNodo() const 
 {
 	Nodo* ultimoNodo = tope;
@@ -355,6 +352,15 @@ void HeapModificable::siftUp(Nodo* p)
 
 void HeapModificable::intercambio(Nodo* padre, Nodo* hijo)
 {
+	Nodo* abuelo = padre->padre;
+	if(abuelo != NULL){
+		if(abuelo->hijoIzq == padre) abuelo->hijoIzq = hijo;
+		else abuelo->hijoDer = hijo; 
+	}
+
+	if(hijo->hijoIzq != NULL) hijo->hijoIzq->padre = padre;
+	if(hijo->hijoDer != NULL) hijo->hijoDer->padre = padre;
+
 	Nat rmc = hijo->ramaMasCorta;
 	Nat rml = hijo->ramaMasLarga;
 	hijo->padre = padre->padre;
@@ -365,17 +371,19 @@ void HeapModificable::intercambio(Nodo* padre, Nodo* hijo)
 	padre->ramaMasLarga = rml;
 	
 	if(padre->hijoIzq == hijo){
-		Nodo* hDer = padre->hijoDer;
+		Nodo* hijoDerDelPadre = padre->hijoDer;
 		padre->hijoIzq = hijo->hijoIzq;
 		padre->hijoDer = hijo->hijoDer;
 		hijo->hijoIzq = padre;
-		hijo->hijoDer = hDer;
+		hijo->hijoDer = hijoDerDelPadre;
+		if(hijoDerDelPadre != NULL) hijoDerDelPadre->padre = hijo;
 	} else {
-		Nodo* hIzq = padre->hijoIzq;
+		Nodo* hijoIzqDelPadre = padre->hijoIzq;
 		padre->hijoIzq = hijo->hijoIzq;
 		padre->hijoDer = hijo->hijoDer;
-		hijo->hijoIzq = hIzq;
+		hijo->hijoIzq = hijoIzqDelPadre;
 		hijo->hijoDer = padre;
+		hijoIzqDelPadre->padre = hijo;
 	}
 }
 
