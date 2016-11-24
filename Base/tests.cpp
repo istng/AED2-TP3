@@ -17,14 +17,9 @@ void test_constructor_con_mapa() {
   cc.Agregar(Coordenada(10,0));
   cc.Agregar(Coordenada(1,4));
 
- 
-
-
   Driver d(cc);
  // std::cout << "todo va bienaa" << std::endl;
   ASSERT( d.mapa() == cc );
-
- // ASSERT( true );
 }
 
 void test_agregar_jugadores(){
@@ -104,6 +99,44 @@ void test_puedo_agregar_pokemones(){
   ASSERT(d.puedoAgregarPokemon(Coordenada(10,0)));
 }
 
+void test_moverse(){
+  // Test básico de moverse, 
+  Conj<Coordenada> cc;
+
+  cc.Agregar(Coordenada(0,0));
+  cc.Agregar(Coordenada(0,1));
+  cc.Agregar(Coordenada(10,0));
+
+
+  Driver d(cc);
+
+  d.agregarPokemon("poke1", Coordenada(10,0));
+
+  Nat j1 = d.agregarJugador();
+  Nat j2 = d.agregarJugador();
+
+  d.conectarse(j1, Coordenada(10,0));
+  d.conectarse(j2, Coordenada(0,0));
+
+  //ASSERT(d.entrenadoresPosibles(Coordenada(10,0)).Pertenece(j1));
+
+  for(Nat i = 0; i < 10; ++i){
+    //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
+    d.moverse(j2, Coordenada(0,1));
+    ++i;
+    ASSERT(d.posicion(j2) == Coordenada(0,1));
+    //cout << endl << d.cantMovimientosParaCaptura(Coordenada(10,0)) << endl;
+    //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
+    d.moverse(j2, Coordenada(0,0));
+  }
+  
+  ASSERT(!d.hayPokemonCercano(Coordenada(10,4)));
+  ASSERT(d.pokemons(j1).CantClaves() == 1);
+  ASSERT(d.pokemons(j1).Definido("poke1"));
+  ASSERT(d.pokemons(j1).Significado("poke1") == 1);
+  ASSERT(d.pokemons(j2).CantClaves() == 0);
+}
+
 
 int main(int argc, char **argv)
 {
@@ -111,6 +144,7 @@ int main(int argc, char **argv)
  RUN_TEST(test_agregar_jugadores);
  RUN_TEST(test_agregar_pokemones);
  RUN_TEST(test_puedo_agregar_pokemones);
+ RUN_TEST(test_moverse);
   
   return 0;
 }
