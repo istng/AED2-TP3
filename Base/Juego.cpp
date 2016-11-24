@@ -172,7 +172,7 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 		while(posPoke.HaySiguiente())
         {
             bool seMovioDesde = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) <= 4;
-            bool seMovioHacia = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) > 4;
+            bool seMovioHacia = DistEuclidea(posPoke.Siguiente().SiguienteClave(),F) <= 4;
 
             // Para el caso 1 no entra pasa todas las guardas deveria evaluar a false pues seMovioDesde y SeMovioHacia son true.
 
