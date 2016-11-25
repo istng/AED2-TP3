@@ -299,7 +299,6 @@ bool Juego::pudoAgregarPokemon(const Coordenada& c) const{
 }
 
 bool Juego::hayPokemonCercano(const Coordenada& c) const{
-    if(_mapa->posExistente(c)){
         Conj<Coordenada> posibles = coordARadio(c,2);
         Conj<Coordenada>::const_Iterador it = posibles.CrearIt();
         while(it.HaySiguiente()){
@@ -307,9 +306,7 @@ bool Juego::hayPokemonCercano(const Coordenada& c) const{
                 return true;
             }
             it.Avanzar();
-        }
-    }
-    return false;    
+        }   
 }
 
 const Coordenada Juego::posPokemonCercano(const Coordenada& c) const{

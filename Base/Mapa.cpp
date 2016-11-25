@@ -17,7 +17,6 @@ bool Mapa::posExistente(const Coordenada& c) const{
 
 	if (c.longitud < this->columnas.Longitud() )
 	{
-		//std::cout << std::endl << c.longitud <<" " << this->columnas.Longitud() <<std::endl;
 		Vector<Info> fila = this->columnas[c.longitud];
 		if (c.latitud < fila.Longitud())
 
@@ -68,9 +67,9 @@ void Mapa::agregarCoor(const Coordenada& c){
 	{
 		Coordenada cprima = it.Siguiente();
 		bool hayCamino = this->hayCamino2(c,cprima);
-		bool enRango = DistEuclidea(c,it.Siguiente()) < 100;
+		bool enRango = DistEuclidea(c,it.Siguiente()) <= 100;
 
-		if ( hayCamino && enRango && c != cprima )
+		if ( hayCamino && enRango )
 		{
 			this->columnas[longitud(cprima)][latitud(cprima)]._adyacentes.AgregarRapido(c);
 			Info->_adyacentes.AgregarRapido(cprima);
@@ -78,8 +77,6 @@ void Mapa::agregarCoor(const Coordenada& c){
 
 		it.Avanzar();
 	}
-
-	//std::cout << std::endl << this->coords << std:: endl;
 
 }
 
