@@ -169,58 +169,66 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 {
 	Coordenada I = _jugadores[e].posicion;
 	Coordenada F = c;
-	Conj<Pokemon>::Iterador poke = (pokemonsTotales->Claves()).CrearIt();
-	while(poke.HaySiguiente())
-	{
-		Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke = pokemonsTotales->Obtener(poke.Siguiente()).pos.CrearIt();
-		while(posPoke.HaySiguiente())
-        {
-            bool seMovioDesde = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) <= 4;
-            bool seMovioHacia = DistEuclidea(posPoke.Siguiente().SiguienteClave(),F) <= 4;
 
-            // Para el caso 1 no entra pasa todas las guardas deveria evaluar a false pues seMovioDesde y SeMovioHacia son true.
-
-            Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador it2 = posPoke;
-			it2.Avanzar();
-
-            if (seMovioDesde && !seMovioHacia)  //Caso 2
-			{
-                laCoordenadaEsInicio(posPoke,I,F,e);
-                
-			}
-            else if (!seMovioDesde && seMovioHacia )  //Caso 3
-			{
-				laCoordenadaEsFinal(posPoke,I,F,e);
-			}
-            else if( !seMovioDesde && !seMovioHacia)  //Caso 4
-			{
-				laCoordenadaEsOtra(posPoke,I,F);
-
-			}
-			posPoke = it2;
-
-			// fijarse donde se avanza posPoke!
-		}
-		poke.Avanzar();
-	}
-	_jugadores[e].posMatriz.EliminarSiguiente();
-	_jugadores[e].posMatriz = matrizJugadores[c.longitud][c.latitud].AgregarRapido(e);
-	_jugadores[e].posicion = c;
-	if ( DistEuclidea(I,F) < 100 )
+	bool seSanciono = false;
+	if ( DistEuclidea(I,F) <= 100 )
 	{ 
 		if ( ! _mapa->hayCamino(I,F))
 		{
 			_jugadores[e].sanciones = _jugadores[e].sanciones + 1;
+			seSanciono = true;
 		}
 	}
-	if (DistEuclidea(I,F) >= 100)
+	if (DistEuclidea(I,F) > 100)
 	{
 		_jugadores[e].sanciones = _jugadores[e].sanciones + 1;
+		seSanciono = true;
 	}
 	
 	if(_jugadores[e].sanciones >= 5 )
 	{
 		expulsarJugador(e);
+	}
+	
+	if (!seSanciono)
+	{
+		Conj<Pokemon>::Iterador poke = (pokemonsTotales->Claves()).CrearIt();
+		while(poke.HaySiguiente()){
+	
+			Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador posPoke = pokemonsTotales->Obtener(poke.Siguiente()).pos.CrearIt();
+			while(posPoke.HaySiguiente())
+        	{
+            	bool seMovioDesde = DistEuclidea(posPoke.Siguiente().SiguienteClave(),I) <= 4;
+            	bool seMovioHacia = DistEuclidea(posPoke.Siguiente().SiguienteClave(),F) <= 4;
+
+            	// Para el caso 1 no entra pasa todas las guardas deveria evaluar a false pues seMovioDesde y SeMovioHacia son true.
+
+            	Conj< Dicc<Coordenada, infoCoord>::Iterador >::Iterador it2 = posPoke;
+				it2.Avanzar();
+
+            	if (seMovioDesde && !seMovioHacia)  //Caso 2
+				{
+                	laCoordenadaEsInicio(posPoke,I,F,e);
+                
+				}
+            	else if (!seMovioDesde && seMovioHacia )  //Caso 3
+				{
+					laCoordenadaEsFinal(posPoke,I,F,e);
+				}
+            	else if( !seMovioDesde && !seMovioHacia)  //Caso 4
+				{
+					laCoordenadaEsOtra(posPoke,I,F);
+
+				}
+				posPoke = it2;
+
+				// fijarse donde se avanza posPoke!
+			}
+			poke.Avanzar();
+		}
+		_jugadores[e].posMatriz.EliminarSiguiente();
+		_jugadores[e].posMatriz = matrizJugadores[c.longitud][c.latitud].AgregarRapido(e);
+		_jugadores[e].posicion = c;
 	}
 	
 }
