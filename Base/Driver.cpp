@@ -122,15 +122,8 @@ Conj< Jugador > Driver::expulsados() const{
 
 Conj< Coordenada > Driver::posConPokemons() const{
 
-	Conj< Coordenada > res;
-	Conj<Coordenada>::const_Iterador it = this->pJuego->posConPokemons();
-	while (it.HaySiguiente())
-	{
-		res.Agregar(it.Siguiente());
-		it.Avanzar();
-	}
 
-	return res;
+	return this->pJuego->posConPokemons();
 
 }
 

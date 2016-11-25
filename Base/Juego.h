@@ -30,7 +30,7 @@ class Juego
 		const Coordenada& posicion(Jugador e) const;
 		Conj<pokes>::const_Iterador pokemons(Jugador e) const; // cambie multiconjunto/tupla por pokes
 		const Conj<Jugador>::const_Iterador expulsados() const; 
-		const Conj<Coordenada>::const_Iterador posConPokemons() const;
+		const Conj<Coordenada> posConPokemons() const;
 		const Pokemon& pokemonEnPos(const Coordenada& c) const;
 		Nat cantMovimientosParaCapturar(const Coordenada& c) const;
 		

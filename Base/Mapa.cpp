@@ -1,5 +1,7 @@
 #include "Mapa.h"
 
+
+
 Mapa::Mapa(): columnas(),coords(){
 }
 
@@ -83,7 +85,7 @@ void Mapa::agregarCoor(const Coordenada& c){
 
 bool Mapa::hayCamino (const Coordenada& c , const Coordenada& cprima)const {
 
-	if (DistEuclidea(c,cprima))
+	if (DistEuclidea(c,cprima) < 100)
 	{
 		return (this->columnas[longitud(c)][latitud(c)]._adyacentes).Pertenece(cprima);
 	}
