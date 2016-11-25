@@ -121,7 +121,7 @@ void test_moverse(){
 
   //ASSERT(d.entrenadoresPosibles(Coordenada(10,0)).Pertenece(j1));
 
-  for(Nat i = 0; i < 11; ++i){
+  for(Nat i = 0; i < 15; ++i){
     //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
     d.moverse(j2, Coordenada(0,1));
     ++i;
@@ -137,14 +137,22 @@ void test_moverse(){
   ASSERT(d.pokemons(j1).Significado("poke1") == 1);
   ASSERT(d.pokemons(j2).CantClaves() == 0);
 
-  for(Nat i = 0; i < 11; ++i){
+  for(Nat i = 0; i < 8; ++i){
     //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
-    d.moverse(j2, Coordenada(10,1));
+    std::cout << std::endl << " iteracion: " << i  << "   "<< "sanciones: " << d.sanciones(j1) << std::endl; 
+    d.moverse(j1, Coordenada(10,1));
     ++i;
     //cout << endl << d.cantMovimientosParaCaptura(Coordenada(10,0)) << endl;
     //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
-    d.moverse(j2, Coordenada(0,0));
+    d.moverse(j1, Coordenada(0,0));
+    std::cout << std::endl << " iteracion: " << i  << "   "<< "sanciones: " << d.sanciones(j1) << std::endl; 
+
+
   }
+
+
+  ASSERT(!d.expulsados().EsVacio());
+  ASSERT(d.cantPokemonsTotales() == 0);
 
 
 

@@ -109,15 +109,10 @@ Dicc< Pokemon , Nat > Driver::pokemons(const Jugador & j) const{
 
 Conj< Jugador > Driver::expulsados() const{
 
-	Conj< Jugador > res;
-	Conj< Jugador >::const_Iterador it = this->pJuego->expulsados();
-	while (it.HaySiguiente())
-	{
-		res.Agregar(it.Siguiente());
-		it.Avanzar();
-	}
+	std::cout <<  this->pJuego->expulsados() << std::endl;
+	return this->pJuego->expulsados();
 
-	return res;
+	
 }
 
 Conj< Coordenada > Driver::posConPokemons() const{

@@ -33,9 +33,9 @@ Conj<Juego::pokes>::const_Iterador Juego::pokemons(Jugador e) const
 	return _jugadores[e].pokemons.CrearIt();
 }
 
-const Conj<Jugador>::const_Iterador Juego::expulsados() const 
+const Conj<Jugador> Juego::expulsados() const 
 {
-	return _expulsados.CrearIt();
+	return _expulsados;
 }
 
 const Conj<Coordenada> Juego::posConPokemons() const
@@ -139,9 +139,9 @@ void Juego::conectarse(Jugador j, const Coordenada& c){
     Conj<Jugador>::Iterador itConj = matrizJugadores[c.longitud][c.latitud].AgregarRapido(j);
     _jugadores[j].posMatriz = itConj;
     if(hayPokemonCercano(c)){
-    	////std:://cout << //std::endl << j << " --- " << c << //std::endl;
+    	//////:://cout << ////::endl << j << " --- " << c << ////::endl;
         Coordenada pokePosi = posPokemonCercano(c);
-    	////std:://cout << //std::endl <<  posPokemonCercano(c) << //std::endl;
+    	//////:://cout << ////::endl <<  posPokemonCercano(c) << ////::endl;
 
         HeapModificable::JugadorHeap nueva = HeapModificable::JugadorHeap(cantidadPokemons(j), j);
 
@@ -179,7 +179,7 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 			seSanciono = true;
 		}
 	}
-	if (DistEuclidea(I,F) > 100)
+	else if (DistEuclidea(I,F) > 100)
 	{
 		_jugadores[e].sanciones = _jugadores[e].sanciones + 1;
 		seSanciono = true;
@@ -187,6 +187,7 @@ void Juego::moverse(Jugador e, const Coordenada& c)
 	
 	if(_jugadores[e].sanciones >= 5 )
 	{
+		////::cout << "se expulsa" <<//::endl;
 		expulsarJugador(e);
 	}
 	
@@ -264,13 +265,13 @@ const Conj<Coordenada> Juego::coordARadio(const Coordenada &c, Nat r) const{
          	 }
 
              if(_mapa->posExistente(Coordenada(i,j)) && ( i1 * i1 + j1 * j1 <= r * r )){
-             	////std:://cout<< "j: " << j << "  i:" << i <<  "   *****************"<< //std::endl;
+             	//////:://cout<< "j: " << j << "  i:" << i <<  "   *****************"<< ////::endl;
                  coords.AgregarRapido(Coordenada(i,j));
              }
              j++;
 
          }
-        // //std:://cout<< "i:" << i << //std::endl;
+        // ////:://cout<< "i:" << i << ////::endl;
          i++;
     }
 
@@ -605,6 +606,7 @@ void Juego::darlePokemon(Jugador e, const Pokemon& p)
 
 void Juego::expulsarJugador(Jugador e)
 {
+	//::cout << //::endl << " entro " << //::endl;
 	cantidadPokeTotal = cantidadPokeTotal - cantidadPokemons(e);
 	eliminarPokemons(e);
 	_jugadores[e].posMatriz.EliminarSiguiente();
@@ -613,9 +615,7 @@ void Juego::expulsarJugador(Jugador e)
 		_jugadores[e].prioridad.eliminarSiguiente();
 	}
 	_jugadores[e].conectado = false;
-	Conj<Jugador>::Iterador expulsarJ = _jugadores[e].lugarNoExpulsado;
-	Conj<Jugador> a;
-	_jugadores[e].lugarNoExpulsado = a.CrearIt();
+	Conj<Jugador>::Iterador expulsarJ = _jugadores[e].lugarNoExpulsado; // el iterador se invalida 
 	expulsarJ.EliminarSiguiente();
 	_expulsados.AgregarRapido(e);	
 
@@ -644,7 +644,10 @@ void Juego::eliminarPokemons(Jugador e)
 		{
 			pokemonsTotales->Borrar(pokemon);
 			iter.EliminarSiguiente();
-
+		}
+		else
+		{
+			iter.Avanzar();
 		}
 	}
 	
