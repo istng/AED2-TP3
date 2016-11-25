@@ -655,6 +655,8 @@ Nat Juego::cantPokemonsTotales() const
 	return cantidadPokeTotal;
 }
 
+
+
 Nat Juego::cantMismaEspecie(const Pokemon& p) const {
 	/*
     DiccString<infoPoke>::const_Iterador it = pokemonsTotales->CrearIt();

@@ -106,6 +106,7 @@ void test_moverse(){
   cc.Agregar(Coordenada(0,0));
   cc.Agregar(Coordenada(0,1));
   cc.Agregar(Coordenada(10,0));
+  cc.Agregar(Coordenada(10,1));
 
 
   Driver d(cc);
@@ -120,7 +121,7 @@ void test_moverse(){
 
   //ASSERT(d.entrenadoresPosibles(Coordenada(10,0)).Pertenece(j1));
 
-  for(Nat i = 0; i < 10; ++i){
+  for(Nat i = 0; i < 11; ++i){
     //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
     d.moverse(j2, Coordenada(0,1));
     ++i;
@@ -130,20 +131,32 @@ void test_moverse(){
     d.moverse(j2, Coordenada(0,0));
   }
   
-  ASSERT(!d.hayPokemonCercano(Coordenada(10,4)));
+  ASSERT(!d.hayPokemonCercano(Coordenada(10,0)));
   ASSERT(d.pokemons(j1).CantClaves() == 1);
   ASSERT(d.pokemons(j1).Definido("poke1"));
   ASSERT(d.pokemons(j1).Significado("poke1") == 1);
   ASSERT(d.pokemons(j2).CantClaves() == 0);
+
+  for(Nat i = 0; i < 11; ++i){
+    //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
+    d.moverse(j2, Coordenada(10,1));
+    ++i;
+    //cout << endl << d.cantMovimientosParaCaptura(Coordenada(10,0)) << endl;
+    //ASSERT(d.cantMovimientosParaCaptura(Coordenada(10,0)) == i);
+    d.moverse(j2, Coordenada(0,0));
+  }
+
+
+
 }
 
 
 int main(int argc, char **argv)
 {
-   RUN_TEST(test_constructor_con_mapa);
- RUN_TEST(test_agregar_jugadores);
- RUN_TEST(test_agregar_pokemones);
- RUN_TEST(test_puedo_agregar_pokemones);
+ //  RUN_TEST(test_constructor_con_mapa);
+// RUN_TEST(test_agregar_jugadores);
+// RUN_TEST(test_agregar_pokemones);
+// RUN_TEST(test_puedo_agregar_pokemones);
  RUN_TEST(test_moverse);
   
   return 0;
